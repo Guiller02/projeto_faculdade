@@ -6,39 +6,35 @@ const TeacherSchema = new mongoose.Schema({
     cod_Teacher: {
         type: String,
         required: true,
-        index:true
     },
-    user:{
-        cpf: {
-            type: String,
-            required: true
-        },
-        name: {
-            type: String,
-            required: true
-        },
-        email: {
-            type: String,
-            required: true,
-            index:true
-        },
-        password: {
-            type: String,
-            required: true,
-            select: false
-        },
-        passwordResetToken: {
-            type: String,
-            select: false
-        },
-        passwordResetExpires: {
-            type: Date,
-            select: false
-        },
-        createdAt: {
-            type: Date,
-            default: Date.now
-        }
+    cpf: {
+        type: String,
+        required: true
+    },
+    name: {
+        type: String,
+        required: true
+    },
+    email: {
+        type: String,
+        required: true,
+    },
+    password: {
+        type: String,
+        required: true,
+        select: false
+    },
+    passwordResetToken: {
+        type: String,
+        select: false
+    },
+    passwordResetExpires: {
+        type: Date,
+        select: false
+    },
+    createdAt: {
+        type: Date,
+        default: Date.now
     }
 });
 

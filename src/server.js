@@ -3,7 +3,7 @@ const express = require('express');
 
 const bodyParser = require('body-parser');
 
-const userRoutes = require('./app/routes/student');
+const userRoutes = require('./app/routes/user');
 
 
 //express
