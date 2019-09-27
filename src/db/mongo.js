@@ -1,6 +1,8 @@
 const mongoose = require("mongoose");
 
-mongoose.connect("mongodb://localhost/faculdade", {
+const env = require('../../.env')
+
+mongoose.connect(database, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     useFindAndModify: false

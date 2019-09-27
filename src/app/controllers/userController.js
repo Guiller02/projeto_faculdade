@@ -4,9 +4,13 @@ var Teacher = require('../models/teacherModel');
 
 const bcrypt = require("bcryptjs");
 
+const env = require('../../../.env')
+
 const authConfig = require('../../config/auth');
 
 const jwt = require("jsonwebtoken");
+
+
 
 // Generate token
 function generateToken(params = {}) {
@@ -58,7 +62,6 @@ exports.user_register = async (req, res) => {
 
                 //if found a student with this register, will create another register
             } while (stop == 0);
-
 
             //to create a new student
             const createdStudent = await Student.create({
@@ -235,8 +238,12 @@ exports.user_search_profile = async (req, res) => {
         else {
             return res.send({ error: 'user not found' })
         }
+
+
+
     } catch (err) {
         console.log(err)
         res.status(400).send({ error: 'error in search user' });
     }
 }
+
