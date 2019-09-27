@@ -10,15 +10,18 @@ const jwt = require("jsonwebtoken");
 
 // Generate token
 function generateToken(params = {}) {
-    return jwt.sign(params, authConfig.secret, {
+    return jwt.sign(
+        params, authConfig.secret, {
         expiresIn: 300
     });
 };
 
+//create user
 exports.user_register = async (req, res) => {
     try {
         var { cpf, name, email, password, option } = req.body;
 
+        //to see if one of the fields are blank
         if (
             (cpf == "") ||
             (name == "") ||
@@ -26,68 +29,189 @@ exports.user_register = async (req, res) => {
             (password == "") ||
             ((option != 1) && (option != 0))
         )
-            return res.status(400).send({ error: 'Verify fields again' })
+            return res.status(400).send({ error: 'Verify fields again' });
 
+        //to generate random number for register
         function random() {
             return Math.floor((Math.random() * 8999) + 1000);
         }
+
+        //option 0 for students
         if (option == 0) {
 
+            //to verify if email or cpf already exist
             if (await Student.findOne({ email }))
                 return res.status(400).send({ error: 'email already exist' });
+
             if (await Student.findOne({ cpf }))
                 return res.status(400).send({ error: 'cpf has already been used' });
 
+            //to create a stop variable for the next do
             var stop = 0;
             do {
+                //create a new student register with randomic number
+                var studentId = 'A' + random();
 
-                var studant = 'A' + random();
-
-                if ((!await Student.findOne({ cod_student: studant })))
+                //if does not have a student with this register, stop will receive 1 and will stop the do
+                if ((!await Student.findOne({ cod_student: studentId })))
                     stop = 1;
 
+                //if found a student with this register, will create another register
             } while (stop == 0);
 
-            const createdStudant = await Student.create({
-                cod_student: studant,
+
+            //to create a new student
+            const createdStudent = await Student.create({
+                cod_student: studentId,
                 cpf,
                 name,
                 email,
                 password
             });
-            return res.send({ createdStudant })
-        }
 
+            //to not return password
+            createdStudent.password = undefined
+
+
+
+            console.log({
+                token: generateToken({
+                    id: studentId
+
+                }),
+            }, studentId)
+
+            return res.send({
+                createdStudent,
+                token: generateToken({
+                    id: studentId
+
+                })
+
+
+            });
+        };
+        //option 1 for teachers
         if (option == 1) {
-
+            //to verify if email or cpf already exist
             if (await Teacher.findOne({ email }))
                 return res.status(400).send({ error: 'email already exist' });
+
             if (await Teacher.findOne({ cpf }))
                 return res.status(400).send({ error: 'cpf has already been used' });
 
+            //to create a stop variable for the next do
             stop = 0;
             do {
+                //create a new teacher register with randomic number
+                var teacherId = 'P' + random();
 
-                var teacher = 'P' + random();
-
-                if ((!await Teacher.findOne({ cod_Teacher: teacher })))
+                //if does not have a student with this register, stop will receive 1 and will stop the do
+                if ((!await Teacher.findOne({ cod_Teacher: teacherId })))
                     stop = 1;
 
+                //if found a student with this register, will create another register
             } while (stop == 0);
 
+            //to create a new student
             const createdTeacher = await Teacher.create({
-                cod_Teacher: teacher,
+                cod_Teacher: teacherId,
                 cpf,
                 name,
                 email,
                 password
             });
-            res.send({ createdTeacher })
+
+            //to not return password
+            createdTeacher.password = undefined;
+
+            res.send({
+                createdTeacher,
+                token: generateToken({
+                    id: teacherId
+                })
+            })
         }
 
     } catch (err) {
         res.status(400).send({ error: 'Error in create new user' });
         console.log(err);
     }
+};
 
+//login
+exports.user_login = async (req, res) => {
+    try {
+        const { register, password } = req.body
+
+        //to return first word of the register, to know if the user is student or teacher to know which database is to search
+        firstRegister = register.charAt(0)
+        //if the first register return A, the user are student
+        if (firstRegister == 'A') {
+            //trying to find the student with the registration and returning password too
+            const student = await Student.findOne({ cod_student: register }).select('+password');
+            //if student registration not found
+            if (!student)
+                return res.status(400).send({ error: 'user not found' });
+            //if the password are not equal
+            if (!(await bcrypt.compare(password, student.password)))
+                return res.status(400).send({ error: 'invalid password' });
+
+            //to send to the user token and return the user which are logged
+            return res.send({
+                student,
+                token: generateToken({
+                    id: register
+                })
+            });
+        }
+        //if the first register return P, the user are student
+        else if (firstRegister == 'P') {
+            //trying to find the teacher with the registration and returning password too
+            const teacher = await Teacher.findOne({ cod_Teacher: register }).select('+password');
+            //if student registration not found
+            if (!teacher)
+                return res.status(400).send({ error: 'user not found' });
+            //if the password are not equal
+            if (!(await bcrypt.compare(password, teacher.password)))
+                return res.status(400).send({ error: 'invalid password' });
+
+            //to send to the user token and return the user which are logged
+            return res.send({
+                teacher,
+                token: generateToken({
+                    id: register
+                })
+            });
+        }
+        //if the user are not equal to A or P, its a invalid register
+        else {
+            res.status(400).send({ error: 'invalid register' })
+        };
+    } catch (err) {
+        res.status(400).send({ error: 'error in authenticate' })
+    }
+}
+
+//show profile
+
+exports.user_profile = async (req, res) => {
+    try {
+
+        const isTeacher = await Teacher.findOne({ cod_Teacher: req.userId });
+        const isStudent = await Student.findOne({ cod_student: req.userId });
+        if (isStudent) {
+            res.send(isStudent);
+        } else if (isTeacher) {
+            res.send(isTeacher);
+        }
+        else
+            res.send({ erro: 'notfound' })
+
+
+        // const user = await
+    } catch (err) {
+        console.log(err)
+        res.status(400).send({ error: 'error in show profile' });
+    }
 }
