@@ -1,6 +1,8 @@
 const jwt = require("jsonwebtoken");
 
-const authConfig = require('../config/auth');
+const env = require('../../.env')
+
+
 
 module.exports = (req, res, next) => {
     const authHeader = req.headers.authorization;
@@ -19,12 +21,8 @@ module.exports = (req, res, next) => {
         return res.status(401).send({ error: "token malformatted" });
     }
 
-    jwt.verify(token, authConfig.secret, (err, decoded) => {
+    jwt.verify(token, env.secret, (err, decoded) => {
         if (err) return res.status(401).send({ error: "token invalid" });
-        // if (req.body.cod_student)
-        //     req.cod_student = decoded.id
-        // if (req.body.cod_Teacher)
-        //     req.cod_Teacher = decoded.id
         req.userId = decoded.id
         console.log(decoded, req.userId);
         return next();

@@ -5,6 +5,9 @@ const bodyParser = require('body-parser');
 
 const userRoutes = require('./app/routes/user');
 
+const studentRoutes = require('./app/routes/student');
+
+require('dotenv').config();
 
 //express
 const app = express();

@@ -145,7 +145,7 @@ exports.user_login = async (req, res) => {
         const { register, password } = req.body
 
         //to return first word of the register, to know if the user is student or teacher to know which database is to search
-        firstRegister = register.charAt(0)
+        firstRegister = register.charAt(0);
         //if the first register return A, the user are student
         if (firstRegister == 'A') {
             //trying to find the student with the registration and returning password too
@@ -207,10 +207,36 @@ exports.user_profile = async (req, res) => {
             res.send(isTeacher);
         }
         else
-            res.send({ erro: 'notfound' })
+            res.send({ erro: 'user not found' })
 
     } catch (err) {
         console.log(err)
         res.status(400).send({ error: 'error in show profile' });
+    }
+}
+
+//show unique user
+exports.user_search_profile = async (req, res) => {
+    try {
+        //to take only the :id in the params
+        const { id } = req.params;
+        //to return the first character of the id
+        firstRegister = id.charAt(0);
+
+        //if the :id start with A, is a student, if start with P, is a teacher or is nothing
+        if (firstRegister == 'A') {
+            student = await Student.findOne({ cod_student: id });
+            return res.send(student);
+        }
+        else if (firstRegister == 'P') {
+            teacher = await Teacher.findOne({ cod_Teacher: id });
+            return res.send(teacher);
+        }
+        else {
+            return res.send({ error: 'user not found' })
+        }
+    } catch (err) {
+        console.log(err)
+        res.status(400).send({ error: 'error in search user' });
     }
 }
