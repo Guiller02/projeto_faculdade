@@ -194,12 +194,13 @@ exports.user_login = async (req, res) => {
 }
 
 //show profile
-
 exports.user_profile = async (req, res) => {
     try {
-
+        //to search if the user is student or teacher
         const isTeacher = await Teacher.findOne({ cod_Teacher: req.userId });
         const isStudent = await Student.findOne({ cod_student: req.userId });
+
+        //if is student render student if is teacher render teacher, or return error
         if (isStudent) {
             res.send(isStudent);
         } else if (isTeacher) {
@@ -208,8 +209,6 @@ exports.user_profile = async (req, res) => {
         else
             res.send({ erro: 'notfound' })
 
-
-        // const user = await
     } catch (err) {
         console.log(err)
         res.status(400).send({ error: 'error in show profile' });
