@@ -4,18 +4,16 @@ var Teacher = require('../models/teacherModel');
 
 const bcrypt = require("bcryptjs");
 
-const env = require('../../../.env')
-
-const authConfig = require('../../config/auth');
+const env = require('../../../.env');
 
 const jwt = require("jsonwebtoken");
 
-
+const sgMail = require('@sendgrid/mail');
 
 // Generate token
 function generateToken(params = {}) {
     return jwt.sign(
-        params, authConfig.secret, {
+        params, env.secret, {
         expiresIn: 300
     });
 };
@@ -75,23 +73,29 @@ exports.user_register = async (req, res) => {
             //to not return password
             createdStudent.password = undefined
 
+            sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+            
+            const msg = {
+                //extract the email details
+                to: email,
+                from: 'notReply@gmail.com',
+                subject: 'Bem vindo a nossa faculdade',
+                templateId:process.env.templateId,
+                "dynamic_template_data":{
+                "name":name,
+                "cod_student":studentId
+            }
+            };
 
-
-            console.log({
-                token: generateToken({
-                    id: studentId
-
-                }),
-            }, studentId)
-
+            //send the email
+            sgMail.send(msg);
+            
             return res.send({
                 createdStudent,
                 token: generateToken({
                     id: studentId
 
                 })
-
-
             });
         };
         //option 1 for teachers
@@ -112,7 +116,7 @@ exports.user_register = async (req, res) => {
                 //if does not have a student with this register, stop will receive 1 and will stop the do
                 if ((!await Teacher.findOne({ cod_Teacher: teacherId })))
                     stop = 1;
-
+                
                 //if found a student with this register, will create another register
             } while (stop == 0);
 
@@ -127,6 +131,23 @@ exports.user_register = async (req, res) => {
 
             //to not return password
             createdTeacher.password = undefined;
+
+            sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
+            const msg = {
+                //extract the email details
+                to: email,
+                from: 'notReply@gmail.com',
+                subject: 'Bem vindo a nossa faculdade',
+                templateId:process.env.templateId,
+                "dynamic_template_data":{
+                "name":name,
+                "cod_student":teacherId
+            }
+            };
+
+            //send the email
+            sgMail.send(msg);
 
             res.send({
                 createdTeacher,
