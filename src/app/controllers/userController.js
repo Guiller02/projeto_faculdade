@@ -14,7 +14,7 @@ const sgMail = require('@sendgrid/mail');
 function generateToken(params = {}) {
     return jwt.sign(
         params, env.secret, {
-        expiresIn: 300
+        expiresIn: 100000000000000000000
     });
 };
 
@@ -83,7 +83,7 @@ exports.user_register = async (req, res) => {
                 templateId:process.env.templateId,
                 "dynamic_template_data":{
                 "name":name,
-                "cod_student":studentId
+                "registration":studentId
             }
             };
 
@@ -142,7 +142,7 @@ exports.user_register = async (req, res) => {
                 templateId:process.env.templateId,
                 "dynamic_template_data":{
                 "name":name,
-                "cod_student":teacherId
+                "registration":teacherId
             }
             };
 
@@ -169,7 +169,8 @@ exports.user_login = async (req, res) => {
         const { register, password } = req.body
 
         //to return first word of the register, to know if the user is student or teacher to know which database is to search
-        firstRegister = register.charAt(0);
+        const firstRegister = register.charAt(0);
+        console.log(register)
         //if the first register return A, the user are student
         if (firstRegister == 'A') {
             //trying to find the student with the registration and returning password too
@@ -213,6 +214,7 @@ exports.user_login = async (req, res) => {
             res.status(400).send({ error: 'invalid register' })
         };
     } catch (err) {
+        console.log(err)
         res.status(400).send({ error: 'error in authenticate' })
     }
 }
@@ -260,11 +262,85 @@ exports.user_search_profile = async (req, res) => {
             return res.send({ error: 'user not found' })
         }
 
-
-
     } catch (err) {
         console.log(err)
         res.status(400).send({ error: 'error in search user' });
     }
 }
 
+exports.user_update = async (req,res) =>{
+    try{
+        //to return id in the route
+        const { id } = req.params;
+
+        //to see if the id of the route is the same of the user loged
+        if(req.userId !=id)
+            return res.status(401).send({error:'invalid user'});
+
+        //to return first register to see if the user is student or teacher
+        const {name,password,email,cpf} = req.body;
+        const firstRegister = req.userId.charAt(0);
+
+        //if the first register start with A, is student, or if start with P, is teacher
+        if(firstRegister=='A'){
+
+        await Student.findOneAndDelete({cod_student:id});
+    
+        //in case of the new email already exists in another user
+        if ((await Student.findOne({ email }) || (await Student.findOne({ cpf }))))
+            res.status(400).send({error:'user already exist'});
+
+        //to see if one of the fields are equal to null or blank
+        if (
+            (name == "")||(name == null) ||
+            (email == "") || (email == null) ||
+            (cpf == "") || (cpf == null) || 
+            (password == "") || (password == null)
+        )
+            return res.status(400).send({error:'verify fields again'});
+
+        //update user with all fields
+        const updatedStudent = await Student.create({
+            cod_student: id,
+            cpf,
+            name,
+            email,
+            password
+            
+        });
+
+        return res.send(updatedStudent);
+
+        }else if (firstRegister=='P'){
+            await Teacher.findOneAndDelete({cod_Teacher:id});
+    
+        //in case of the new email already exists in another user
+        if ((await Teacher.findOne({ email }) || (await Teacher.findOne({ cpf }))))
+            res.status(400).send({error:'user already exist'});
+
+        //to see if one of the fields are equal to null or blank
+        if (
+            (name == "")||(name == null) ||
+            (email == "") || (email == null) ||
+            (cpf == "") || (cpf == null) || 
+            (password == "") || (password == null)
+        )
+            return res.status(400).send({error:'verify fields again'});
+
+        //update user with all fields
+        const updatedTeacher = await Teacher.create({
+            cod_Teacher: id,
+            cpf,
+            name,
+            email,
+            password
+            
+        });
+        
+        return res.send(updatedTeacher);
+    }
+    }catch(err){
+        console.log(err)
+        return res.status(400).send({error:'error in update user'});
+    }
+}

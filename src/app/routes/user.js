@@ -12,6 +12,8 @@ router.post('/login', User.user_login);
 
 router.get('/profile', authMiddleware, User.user_profile);
 
+router.put('/profile/:id', authMiddleware, User.user_update);
+
 router.get('/profile/:id', User.user_search_profile);
 
 module.exports = router;
