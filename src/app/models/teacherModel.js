@@ -35,6 +35,17 @@ const TeacherSchema = new mongoose.Schema({
     createdAt: {
         type: Date,
         default: Date.now
+    },
+    mailToken: {
+        type: String,
+        select: false,
+        required: true
+    },
+    active: {
+        type: Boolean,
+        default: false,
+        required: true,
+        select: false
     }
 });
 

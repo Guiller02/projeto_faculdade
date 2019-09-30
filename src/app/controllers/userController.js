@@ -6,16 +6,25 @@ const bcrypt = require("bcryptjs");
 
 const env = require('../../../.env');
 
+const mail = require('../../services/mail');
+
 const jwt = require("jsonwebtoken");
 
-const sgMail = require('@sendgrid/mail');
-
 // Generate token
-function generateToken(params = {}) {
-    return jwt.sign(
-        params, env.secret, {
-        expiresIn: 100000000000000000000
-    });
+function generateToken(params = {}, option) {
+    if (option == 1) {
+        return jwt.sign(
+            params, env.secret, {
+            expiresIn: '1d'
+        });
+    }
+    else {
+        return jwt.sign(
+            params, env.secret, {
+            expiresIn: '4h'
+        });
+    }
+
 };
 
 //create user
@@ -61,41 +70,32 @@ exports.user_register = async (req, res) => {
                 //if found a student with this register, will create another register
             } while (stop == 0);
 
+            const mailToken = 'A' + generateToken({
+                id: studentId
+
+            }, 1)
+
             //to create a new student
             const createdStudent = await Student.create({
                 cod_student: studentId,
                 cpf,
                 name,
                 email,
-                password
+                password,
+                mailToken
             });
+
+            mail.register(name, email, studentId, mailToken)
 
             //to not return password
             createdStudent.password = undefined
 
-            sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-            
-            const msg = {
-                //extract the email details
-                to: email,
-                from: 'notReply@gmail.com',
-                subject: 'Bem vindo a nossa faculdade',
-                templateId:process.env.templateId,
-                "dynamic_template_data":{
-                "name":name,
-                "registration":studentId
-            }
-            };
-
-            //send the email
-            sgMail.send(msg);
-            
             return res.send({
                 createdStudent,
                 token: generateToken({
                     id: studentId
 
-                })
+                }, 2)
             });
         };
         //option 1 for teachers
@@ -116,9 +116,14 @@ exports.user_register = async (req, res) => {
                 //if does not have a student with this register, stop will receive 1 and will stop the do
                 if ((!await Teacher.findOne({ cod_Teacher: teacherId })))
                     stop = 1;
-                
+
                 //if found a student with this register, will create another register
             } while (stop == 0);
+
+            const mailToken = 'P' + generateToken({
+                id: studentId
+
+            }, 1)
 
             //to create a new student
             const createdTeacher = await Teacher.create({
@@ -126,34 +131,20 @@ exports.user_register = async (req, res) => {
                 cpf,
                 name,
                 email,
-                password
+                password,
+                mailToken
             });
 
             //to not return password
             createdTeacher.password = undefined;
 
-            sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-
-            const msg = {
-                //extract the email details
-                to: email,
-                from: 'notReply@gmail.com',
-                subject: 'Bem vindo a nossa faculdade',
-                templateId:process.env.templateId,
-                "dynamic_template_data":{
-                "name":name,
-                "registration":teacherId
-            }
-            };
-
-            //send the email
-            sgMail.send(msg);
+            mail.register(name, email, teacherId, mailToken)
 
             res.send({
                 createdTeacher,
                 token: generateToken({
                     id: teacherId
-                })
+                }, 1)
             })
         }
 
@@ -268,79 +259,114 @@ exports.user_search_profile = async (req, res) => {
     }
 }
 
-exports.user_update = async (req,res) =>{
-    try{
+exports.user_update = async (req, res) => {
+    try {
         //to return id in the route
         const { id } = req.params;
 
         //to see if the id of the route is the same of the user loged
-        if(req.userId !=id)
-            return res.status(401).send({error:'invalid user'});
+        if (req.userId != id)
+            return res.status(401).send({ error: 'invalid user' });
 
         //to return first register to see if the user is student or teacher
-        const {name,password,email,cpf} = req.body;
+        const { name, password, email, cpf } = req.body;
         const firstRegister = req.userId.charAt(0);
 
         //if the first register start with A, is student, or if start with P, is teacher
-        if(firstRegister=='A'){
+        if (firstRegister == 'A') {
 
-        await Student.findOneAndDelete({cod_student:id});
-    
-        //in case of the new email already exists in another user
-        if ((await Student.findOne({ email }) || (await Student.findOne({ cpf }))))
-            res.status(400).send({error:'user already exist'});
+            await Student.findOneAndDelete({ cod_student: id });
 
-        //to see if one of the fields are equal to null or blank
-        if (
-            (name == "")||(name == null) ||
-            (email == "") || (email == null) ||
-            (cpf == "") || (cpf == null) || 
-            (password == "") || (password == null)
-        )
-            return res.status(400).send({error:'verify fields again'});
+            //in case of the new email already exists in another user
+            if ((await Student.findOne({ email }) || (await Student.findOne({ cpf }))))
+                res.status(400).send({ error: 'user already exist' });
 
-        //update user with all fields
-        const updatedStudent = await Student.create({
-            cod_student: id,
-            cpf,
-            name,
-            email,
-            password
-            
-        });
+            //to see if one of the fields are equal to null or blank
+            if (
+                (name == "") || (name == null) ||
+                (email == "") || (email == null) ||
+                (cpf == "") || (cpf == null) ||
+                (password == "") || (password == null)
+            )
+                return res.status(400).send({ error: 'verify fields again' });
 
-        return res.send(updatedStudent);
+            //update user with all fields
+            const updatedStudent = await Student.create({
+                cod_student: id,
+                cpf,
+                name,
+                email,
+                password
 
-        }else if (firstRegister=='P'){
-            await Teacher.findOneAndDelete({cod_Teacher:id});
-    
-        //in case of the new email already exists in another user
-        if ((await Teacher.findOne({ email }) || (await Teacher.findOne({ cpf }))))
-            res.status(400).send({error:'user already exist'});
+            });
 
-        //to see if one of the fields are equal to null or blank
-        if (
-            (name == "")||(name == null) ||
-            (email == "") || (email == null) ||
-            (cpf == "") || (cpf == null) || 
-            (password == "") || (password == null)
-        )
-            return res.status(400).send({error:'verify fields again'});
+            return res.send(updatedStudent);
 
-        //update user with all fields
-        const updatedTeacher = await Teacher.create({
-            cod_Teacher: id,
-            cpf,
-            name,
-            email,
-            password
-            
-        });
-        
-        return res.send(updatedTeacher);
-    }
-    }catch(err){
+        } else if (firstRegister == 'P') {
+            await Teacher.findOneAndDelete({ cod_Teacher: id });
+
+            //in case of the new email already exists in another user
+            if ((await Teacher.findOne({ email }) || (await Teacher.findOne({ cpf }))))
+                res.status(400).send({ error: 'user already exist' });
+
+            //to see if one of the fields are equal to null or blank
+            if (
+                (name == "") || (name == null) ||
+                (email == "") || (email == null) ||
+                (cpf == "") || (cpf == null) ||
+                (password == "") || (password == null)
+            )
+                return res.status(400).send({ error: 'verify fields again' });
+
+            //update user with all fields
+            const updatedTeacher = await Teacher.create({
+                cod_Teacher: id,
+                cpf,
+                name,
+                email,
+                password
+
+            });
+
+            return res.send(updatedTeacher);
+        }
+    } catch (err) {
         console.log(err)
-        return res.status(400).send({error:'error in update user'});
+        return res.status(400).send({ error: 'error in update user' });
     }
+}
+
+//authenticate email
+exports.user_authenticate_email = async (req, res) => {
+    const { token } = req.params
+    console.log(token)
+    firstToken = token.charAt(0)
+    if (firstToken == 'A') {
+        const isStudent = await Student.findOne({ mailToken: token })
+        if (isStudent) {
+            const updatedStudent = await Student.findOneAndUpdate({ mailToken: token }, {
+                mailToken: undefined,
+                active: true
+            }, { new: true })
+            return res.send(updatedStudent);
+        }
+        else
+            return res.send('invalid token');
+    }
+    else if (firstToken == 'P') {
+        const isTeacher = await Teacher.findOne({ mailToken: token })
+        if (isTeacher) {
+            const updatedTeacher = await Teacher.findOneAndUpdate({ mailToken: token }, {
+                mailToken: undefined,
+                active: true
+            }, { new: true })
+            return res.send(updatedTeacher);
+        }
+        else
+            return res.send('invalid token');
+    }
+    else {
+        return res.send('Token inválido')
+    }
+
 }
