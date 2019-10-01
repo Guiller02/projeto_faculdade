@@ -2,7 +2,7 @@ const sgMail = require('@sendgrid/mail');
 
 const env = require('../../.env')
 
-exports.register = (name, email, register, mailToken) => {
+exports.register = async (name, email, register, mailToken) => {
     sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
     const link = 'localhost/auth/authenticateUser/' + mailToken
@@ -21,5 +21,11 @@ exports.register = (name, email, register, mailToken) => {
     };
 
     //send the email
-    sgMail.send(msg);
+    (async () => {
+        try {
+          await sgMail.send(msg);
+        } catch (err) {
+          console.error(err.toString());
+        }
+      })();
 }

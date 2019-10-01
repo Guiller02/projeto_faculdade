@@ -85,7 +85,7 @@ exports.user_register = async (req, res) => {
                 mailToken
             });
 
-            mail.register(name, email, studentId, mailToken)
+            await mail.register(name, email, studentId, mailToken)
 
             //to not return password
             createdStudent.password = undefined
@@ -242,7 +242,7 @@ exports.user_search_profile = async (req, res) => {
 
         //if the :id start with A, is a student, if start with P, is a teacher or is nothing
         if (firstRegister == 'A') {
-            student = await Student.findOne({ cod_student: id });
+            student = await Student.findOne({ cod_student: id },'name cod_student createdAt');
             return res.send(student);
         }
         else if (firstRegister == 'P') {
@@ -259,7 +259,7 @@ exports.user_search_profile = async (req, res) => {
     }
 }
 
-exports.user_update = async (req, res) => {
+exports.user_update = async (req, res) => { 
     try {
         //to return id in the route
         const { id } = req.params;
@@ -275,11 +275,15 @@ exports.user_update = async (req, res) => {
         //if the first register start with A, is student, or if start with P, is teacher
         if (firstRegister == 'A') {
 
-            await Student.findOneAndDelete({ cod_student: id });
+            await Student.findOneAndUpdate({ cod_student: id },{
+                email:undefined,
+                password:null,
+                cpf:undefined
+                });
 
             //in case of the new email already exists in another user
             if ((await Student.findOne({ email }) || (await Student.findOne({ cpf }))))
-                res.status(400).send({ error: 'user already exist' });
+                return res.status(400).send({ error: 'user already exist' });
 
             //to see if one of the fields are equal to null or blank
             if (
@@ -291,42 +295,47 @@ exports.user_update = async (req, res) => {
                 return res.status(400).send({ error: 'verify fields again' });
 
             //update user with all fields
-            const updatedStudent = await Student.create({
-                cod_student: id,
-                cpf,
+            const updatedStudent = await Student.findOneAndUpdate({cod_student:id},{
                 name,
                 email,
-                password
+                cpf
+            },{new:true});
 
-            });
+            updatedStudent.password = password
+            await updatedStudent.save()
+            console.log(password)
 
             return res.send(updatedStudent);
 
         } else if (firstRegister == 'P') {
-            await Teacher.findOneAndDelete({ cod_Teacher: id });
+            await Teacher.findOneAndUpdate({ cod_Teacher: id },{
+                email:undefined,
+                password:0,
+                cpf:undefined
+                });
 
             //in case of the new email already exists in another user
             if ((await Teacher.findOne({ email }) || (await Teacher.findOne({ cpf }))))
-                res.status(400).send({ error: 'user already exist' });
+                return res.status(400).send({ error: 'user already exist' });
 
             //to see if one of the fields are equal to null or blank
             if (
                 (name == "") || (name == null) ||
                 (email == "") || (email == null) ||
-                (cpf == "") || (cpf == null) ||
+                (cpf == "") || (cpf == null) || 
                 (password == "") || (password == null)
             )
                 return res.status(400).send({ error: 'verify fields again' });
 
             //update user with all fields
-            const updatedTeacher = await Teacher.create({
-                cod_Teacher: id,
-                cpf,
+            const updatedTeacher = await Teacher.findOneAndUpdate({cod_Teacher:id},{
                 name,
                 email,
-                password
-
-            });
+                cpf,
+            },{new:true});
+            updatedTeacher.password = password
+            await updatedTeacher.save()
+            console.log(password)
 
             return res.send(updatedTeacher);
         }

@@ -1,4 +1,4 @@
-const mongoose = require('../../db/database');
+const mongoose = require('../../db/mongo');
 
 const QuestionsSchema = mongoose.Schema({
     title: {
