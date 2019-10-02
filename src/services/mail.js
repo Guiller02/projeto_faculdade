@@ -1,24 +1,28 @@
 const sgMail = require('@sendgrid/mail');
 
-const env = require('../../.env')
+//enquanto estiver em desenvolvimento, deixe essas funções comentadas
+
+exports.register = function register(name, email, register, mailToken) {
+    // sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 exports.register = async (name, email, register, mailToken) => {
     sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+    // const link = 'localhost/auth/authenticateUser/' + mailToken
 
-    const link = 'localhost/auth/authenticateUser/' + mailToken
+    // console.log('passou aqui')
 
-    const msg = {
-        //extract the email details
-        to: email,
-        from: 'notReply@gmail.com',
-        subject: 'Bem vindo a nossa faculdade',
-        templateId: process.env.templateId,
-        "dynamic_template_data": {
-            "name": name,
-            "registration": register,
-            "link": link
-        }
-    };
+    // const msg = {
+    //     //extract the email details
+    //     to: email,
+    //     from: 'notReply@gmail.com',
+    //     subject: 'Bem vindo a nossa faculdade',
+    //     templateId: process.env.templateId,
+    //     "dynamic_template_data": {
+    //         "name": name,
+    //         "registration": register,
+    //         "link": link
+    //     }
+    // };
 
     //send the email
     (async () => {
@@ -28,4 +32,7 @@ exports.register = async (name, email, register, mailToken) => {
           console.error(err.toString());
         }
       })();
+}
+    // //send the email
+    // sgMail.send(msg);
 }

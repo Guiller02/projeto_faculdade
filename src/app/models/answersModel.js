@@ -5,11 +5,6 @@ const AnswersSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    rank: {
-        type: Number,
-        required: true,
-        default: 0
-    },
     userRegister: {
         type: String,
         required: true

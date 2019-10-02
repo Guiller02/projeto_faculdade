@@ -50,7 +50,7 @@ exports.user_register = async (req, res) => {
         //option 0 for students
         if (option == 0) {
 
-            //to verify if email or cpf already exist
+            // //to verify if email or cpf already exist
             if (await Student.findOne({ email }))
                 return res.status(400).send({ error: 'email already exist' });
 
@@ -85,7 +85,7 @@ exports.user_register = async (req, res) => {
                 mailToken
             });
 
-            await mail.register(name, email, studentId, mailToken)
+            mail.register(name, email, studentId, mailToken);
 
             //to not return password
             createdStudent.password = undefined
@@ -95,12 +95,12 @@ exports.user_register = async (req, res) => {
                 token: generateToken({
                     id: studentId
 
-                }, 2)
+                }, 1)
             });
         };
         //option 1 for teachers
         if (option == 1) {
-            //to verify if email or cpf already exist
+            // //to verify if email or cpf already exist
             if (await Teacher.findOne({ email }))
                 return res.status(400).send({ error: 'email already exist' });
 
@@ -108,10 +108,10 @@ exports.user_register = async (req, res) => {
                 return res.status(400).send({ error: 'cpf has already been used' });
 
             //to create a stop variable for the next do
-            stop = 0;
+            var stop = 0;
             do {
-                //create a new teacher register with randomic number
-                var teacherId = 'P' + random();
+                //create a new Teacher register with randomic number
+                var teacherId = 'A' + random();
 
                 //if does not have a student with this register, stop will receive 1 and will stop the do
                 if ((!await Teacher.findOne({ cod_Teacher: teacherId })))
@@ -121,7 +121,7 @@ exports.user_register = async (req, res) => {
             } while (stop == 0);
 
             const mailToken = 'P' + generateToken({
-                id: studentId
+                id: teacherId
 
             }, 1)
 
@@ -135,17 +135,19 @@ exports.user_register = async (req, res) => {
                 mailToken
             });
 
+            mail.register(name, email, teacherId, mailToken);
+
             //to not return password
-            createdTeacher.password = undefined;
+            createdTeacher.password = undefined
 
-            mail.register(name, email, teacherId, mailToken)
-
-            res.send({
+            return res.send({
                 createdTeacher,
                 token: generateToken({
                     id: teacherId
+
                 }, 1)
-            })
+            });
+
         }
 
     } catch (err) {

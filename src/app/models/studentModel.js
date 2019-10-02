@@ -19,6 +19,10 @@ const StudentSchema = new mongoose.Schema({
         type: String,
         required: true,
     },
+    solutions: {
+        type: String,
+        default: 0
+    },
     password: {
         type: String,
         required: true,
