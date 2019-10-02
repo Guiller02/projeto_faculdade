@@ -1,14 +1,9 @@
-const mongoose = require('../../db/database');
+const mongoose = require('../../db/mongo');
 
 const AnswersSchema = mongoose.Schema({
     answer: {
         type: String,
         required: true
-    },
-    rank: {
-        type: Number,
-        required: true,
-        default: 0
     },
     userRegister: {
         type: String,

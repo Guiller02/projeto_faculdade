@@ -7,6 +7,8 @@ const userRoutes = require('./app/routes/user');
 
 const studentRoutes = require('./app/routes/student');
 
+const questionsRoutes = require('./app/routes/question');
+
 require('dotenv').config();
 
 
@@ -20,5 +22,7 @@ app.use(bodyParser.json());
 //Routes
 
 app.use('/auth', userRoutes);
+
+app.use('/questions', questionsRoutes);
 
 app.listen(3000);
