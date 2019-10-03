@@ -20,6 +20,10 @@ const QuestionsSchema = mongoose.Schema({
     data: {
         type: Date,
         default: Date.now
+    },
+    status:{
+        type:Boolean,
+        default:true
     }
 });
 

@@ -4,14 +4,14 @@ const Student = require('../models/studentModel');
 
 const Answers = require('../models/answersModel');
 
-const Student = require('../models/studentModel');
-
 // Display all questions
 exports.question_list = async (req, res) => {
     try {
-        const questions = await Question.find({},'title description username data');
-        res.send(questions);
 
+        const questions = await Question.find({},'title description username data');
+        
+        res.send(questions);
+        
     } catch (err) {
         console.log(err)
         res.send({ error: 'error in list questions' });

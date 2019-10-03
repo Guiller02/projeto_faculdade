@@ -25,7 +25,39 @@ function generateToken(params = {}, option) {
         });
     }
 
+
 };
+
+exports.mail_valid = async (req,res,next)=>{
+    try{
+        const firstRegister = req.userId.charAt(0);
+        console.log('está recebendo:'+ req.userId)
+        if(firstRegister=='A'){
+            const {active} = await Student.findOne({cod_student:req.userId}).select('+active');
+            console.log(active)
+            if(active==true){
+                return next();   
+            }
+            else{
+                return res.send({error:'Verify email to see this'});
+            }
+        }
+        else if(firstRegister=='P'){
+            const {active} = await Teacher.findOne({cod_Teacher:req.userId}).select('+active');
+            console.log(active)
+            if(active==true){
+                return next();
+            }
+            else{
+                return res.send({error:'Verify email to see this'});
+            }
+        }
+    }catch(err){
+        console.log(err)
+        return res.status(400).send({error:'invalid user'});
+        
+    }
+}
 
 //create user
 exports.user_register = async (req, res) => {
@@ -111,7 +143,7 @@ exports.user_register = async (req, res) => {
             var stop = 0;
             do {
                 //create a new Teacher register with randomic number
-                var teacherId = 'A' + random();
+                var teacherId = 'P' + random();
 
                 //if does not have a student with this register, stop will receive 1 and will stop the do
                 if ((!await Teacher.findOne({ cod_Teacher: teacherId })))
@@ -244,7 +276,7 @@ exports.user_search_profile = async (req, res) => {
 
         //if the :id start with A, is a student, if start with P, is a teacher or is nothing
         if (firstRegister == 'A') {
-            student = await Student.findOne({ cod_student: id },'name cod_student createdAt');
+            student = await Student.findOne({ cod_student: id },'name cod_student createdAt solutions');
             return res.send(student);
         }
         else if (firstRegister == 'P') {
@@ -304,8 +336,7 @@ exports.user_update = async (req, res) => {
             },{new:true});
 
             updatedStudent.password = password
-            await updatedStudent.save()
-            console.log(password)
+            await updatedStudent.save();
 
             return res.send(updatedStudent);
 
@@ -336,8 +367,7 @@ exports.user_update = async (req, res) => {
                 cpf,
             },{new:true});
             updatedTeacher.password = password
-            await updatedTeacher.save()
-            console.log(password)
+            await updatedTeacher.save();
 
             return res.send(updatedTeacher);
         }

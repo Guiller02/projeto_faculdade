@@ -11,8 +11,6 @@ const questionsRoutes = require('./app/routes/question');
 
 require('dotenv').config();
 
-
-
 //express
 const app = express();
 

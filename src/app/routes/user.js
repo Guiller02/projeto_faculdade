@@ -10,7 +10,7 @@ router.post('/register', User.user_register);
 
 router.post('/login', User.user_login);
 
-router.get('/profile', authMiddleware, User.user_profile);
+router.get('/profile', authMiddleware,User.mail_valid, User.user_profile);
 
 router.put('/profile/:id', authMiddleware, User.user_update);
 

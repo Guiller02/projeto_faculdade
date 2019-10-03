@@ -6,10 +6,11 @@ const Student = require('../models/studentModel');
 exports.answer_create = async (req, res) => {
     try {
         const userRegister = req.userId
-        const { name } = await Student.findOne({ cod_student: userRegister });
+        const { name, solutions } = await Student.findOne({ cod_student: userRegister });
         const { answer } = req.body;
         const { questionId } = req.params;
         const cratedAnswer = await Answer.create({ answer, userRegister, username: name, question: questionId });
+        await Student.findOneAndUpdate({cod_student:userRegister},{solutions:solutions+1})
         res.send(cratedAnswer)
     } catch (err) {
         console.log(err)
@@ -17,20 +18,6 @@ exports.answer_create = async (req, res) => {
     }
 };
 
-
-
-// // Create a new Comment
-// // exports.Comment_create = async (req, res) => {
-// //     try {
-// //         const { comment } = req.body;
-// //         const createdComment = await Comment.create({ comment, user: req.userId, post: req.params.postId });
-// //         res.send(createdComment);
-// //     } catch (err) {
-// //         console.log(err);
-// //         res.send({ erro: 'erro ao tentar cadastrar um novo comentario' });
-// //     }
-
-// // };
 
 // // Delete Comment
 // exports.Comment_delete = async (req, res) => {

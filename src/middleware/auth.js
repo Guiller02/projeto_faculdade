@@ -2,7 +2,9 @@ const jwt = require("jsonwebtoken");
 
 const env = require('../../.env')
 
+const Student = require('../app/models/studentModel');
 
+const Teacher = require('../app/models/teacherModel');
 
 module.exports = (req, res, next) => {
     const authHeader = req.headers.authorization;
@@ -23,7 +25,7 @@ module.exports = (req, res, next) => {
 
     jwt.verify(token, env.secret, (err, decoded) => {
         if (err) return res.status(401).send({ error: "token invalid" });
-        req.userId = decoded.id
+        req.userId = decoded.id;
         console.log(decoded, req.userId);
         return next();
     });
