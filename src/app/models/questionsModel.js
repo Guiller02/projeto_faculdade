@@ -13,6 +13,22 @@ const QuestionsSchema = mongoose.Schema({
         type: String,
         required: true
     },
+    answers: [{
+
+        answer: {
+            type: String,
+            required: true
+        },
+        username: {
+            type: String,
+            required: true
+        },
+        userRegister: {
+            type: String,
+            required: true
+        },
+    }
+    ],
     username: {
         type: String,
         required: true
@@ -21,9 +37,9 @@ const QuestionsSchema = mongoose.Schema({
         type: Date,
         default: Date.now
     },
-    status:{
-        type:Boolean,
-        default:true
+    status: {
+        type: Boolean,
+        default: true
     }
 });
 

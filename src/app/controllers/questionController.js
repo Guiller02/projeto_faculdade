@@ -7,35 +7,40 @@ const Answers = require('../models/answersModel');
 // Display all questions
 exports.question_list = async (req, res) => {
     try {
+        var count = []
+        const questions = await Question.find();
+        questions.forEach(question => {
+            count.push(question.answers.length)
+        });
+        res.send({ count, questions })
 
-        const questions = await Question.find({},'title description username data');
-        
-        res.send(questions);
-        
     } catch (err) {
         console.log(err)
         res.send({ error: 'error in list questions' });
     }
 };
 
-//create new question
-exports.question_create = async(req,res)=>{
-    try{
-        const {name} = await Student.findOne({cod_student:req.userId});
+//create a new question 
+exports.question_create = async (req, res) => {
+    try {
+        register = req.userId;
+        console.log(register);
         const firstRegister = register.charAt(0);
-        if (firstRegister == 'A'){
-            const {title,description} = req.body;
-            const createdQuestion = await Question.create({title,description,username:name,userRegister:req.userId});
-            res.send(createdQuestion)
-    }
-    else{
-        return res.status(401).send({error:'not authorized'})
-    }
-    }catch(err){
-        res.send({error:'error in creating user'})
+        if (firstRegister == 'A') {
+            const { name } = await Student.findOne({ cod_student: register })
+            const { title, description } = req.body
+            console.log(name)
+            const question = await Question.create({ title, description, userRegister: req.userId, username: name });
+            return res.send(question)
+        }
+        else {
+            return res.status(400).send({ error: 'invalid user' })
+        }
+    } catch (err) {
         console.log(err)
+        res.send('error')
     }
-}
+};
 
 //get unique question
 exports.question_show = async (req, res) => {
@@ -86,4 +91,29 @@ exports.question_update = async (req, res) => {
     }
 }
 
+// // Update post
+// exports.post_update = async (req, res) => {
+//     try {
+//         //Retornando usuario logado
+//         const isUser = req.userId;
+//         //procurando o id do usuario que fez a postagem
+//         const { user } = await Post.findById(req.params.postId);
+//         //comparando se é o mesmo usuario
+//         if (isUser != user)
+//             return res.status(401).send({ erro: 'usuario invalido!' });
+//         const { title, description } = req.body;
+//         if (title, description == null)
+//             res.status(400).send({ error: 'Cannot update' })
+//         const updatedPost = await Post.findByIdAndUpdate(req.params.postId, {
+//             title,
+//             description
+//         }, { new: true });
+
+//         res.send({ updatedPost });
+
+//     } catch (err) {
+//         console.log(err);
+//         res.send({ erro: 'erro ao procurar a postagem' });
+//     }
+// };
 
