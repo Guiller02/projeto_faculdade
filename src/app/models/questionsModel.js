@@ -27,6 +27,10 @@ const QuestionsSchema = mongoose.Schema({
             type: String,
             required: true
         },
+        data: {
+            type: Date,
+            required: true
+        }
     }
     ],
     username: {

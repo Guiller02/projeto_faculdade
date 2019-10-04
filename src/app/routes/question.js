@@ -2,23 +2,27 @@ const express = require('express');
 
 const Question = require('../controllers/questionController');
 
-const Answer = require('../controllers/answerController');
+const Student = require('../controllers/studentController');
+
+const user = require('../controllers/userController');
 
 const authMiddleware = require('../../middleware/auth');
 
 const router = express.Router();
 
+router.use(authMiddleware, Student.isStudent)
+
 router.get('/', Question.question_list);
 
-router.post('/', authMiddleware, Question.question_create);
+router.post('/', Question.question_create);
 
-router.delete('/:questionId', authMiddleware, Question.question_delete);
+router.delete('/:questionId', Question.question_delete);
 
 router.get('/:questionId', Question.question_show);
 
-router.put('/:questionId', authMiddleware, Question.question_update);
+router.put('/:questionId', Question.question_update);
 
-router.post('/:questionId', authMiddleware, Answer.answer_create);
+router.put('/createAnswer/:questionId', Question.answer_create);
 
 module.exports = router;
 

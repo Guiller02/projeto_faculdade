@@ -21,7 +21,13 @@ const StudentSchema = new mongoose.Schema({
     },
     solutions: {
         type: Number,
+        required: true,
         default: 0
+    },
+    points: {
+        type: Number,
+        default: 1,
+        required: true
     },
     password: {
         type: String,
