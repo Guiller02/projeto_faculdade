@@ -6,13 +6,13 @@ const Student = require('../models/studentModel');
 exports.question_list = async (req, res) => {
     try {
         //to create count of answers for each question 
-        var count = []
+        var count = [];
 
         //to list only status title userame and data in the list of all questions
-        const questionsList = await Question.find({}, 'status title username data');
+        const questionsList = await Question.find({}, 'status title username data').sort({ "data": "desc" }).exec()
 
         //to find all questions for use in forEach
-        const questions = await Question.find();
+        const questions = await Question.find().sort({ "data": "desc" }).exec();
         questions.forEach(question => {
             //insert into count the number of array lenght in database
             count.push(question.answers.length)
@@ -108,7 +108,7 @@ exports.question_update = async (req, res) => {
     } catch (err) {
         res.send({ error: 'error in update question' });
     }
-}
+};
 
 // // create answer
 exports.answer_create = async (req, res) => {
@@ -149,4 +149,15 @@ exports.answer_create = async (req, res) => {
         console.log(err)
 
     }
-}
+};
+
+exports.forum_report = async (req, res) => {
+    try {
+        const studentReport = await Student.find({}).sort({ "solutions": "desc" }).exec()
+        res.send(studentReport)
+    } catch (err) {
+        res.status(400).send({ error: 'error in show report' });
+        console.log(err)
+    }
+
+};
