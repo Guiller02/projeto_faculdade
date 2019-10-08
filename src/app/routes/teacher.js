@@ -13,7 +13,7 @@ router.use(authMiddleware, Teacher.isTeacher);
 
 router.get('/forum/report', Question.forum_report);
 
-router.get('/discipline/:idDiscipline/class/:idClass', Teacher.show_discipline);
+router.get('/discipline/:idDiscipline/class/:idClass', Teacher.show_students);
 
 router.post('/discipline/:idDiscipline/class/:idClass', Teacher.insert_grades);
 

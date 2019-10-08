@@ -15,7 +15,8 @@ exports.isTeacher = async (req, res, next) => {
         next();
 }
 
-exports.show_discipline = async (req, res) => {
+//show students this teacher gives lesson with the class id of class and discipline 
+exports.show_students = async (req, res) => {
     try {
 
         const isTeacher = await Teacher.findOne({ cod_Teacher: req.userId });
@@ -32,8 +33,7 @@ exports.show_discipline = async (req, res) => {
                 console.log(err)
                 return res.status(400).send({ error: 'error in show disciplines' });
             }
-
-            const sql = `SELECT DISCIPLINA.ST_NOME_DISCIPLINA, HISTORICO.ST_COD_ALUNO, HISTORICO.FL_NOTA_ALUNO, HISTORICO.INT_COD_TURMA
+            const sql = `SELECT DISCIPLINA.ST_NOME_DISCIPLINA, HISTORICO.ST_COD_ALUNO, HISTORICO.FL_NOTA_ALUNO
               FROM HISTORICO
               JOIN DISCIPLINA
               ON HISTORICO.INT_ID_DISCIPLINA = DISCIPLINA.INT_ID_DISCIPLINA
@@ -59,10 +59,10 @@ exports.show_discipline = async (req, res) => {
 
                 if (err) {
                     console.log(err)
-                    return res.status(401).json({ error: `SQL execute error: ${err}` });
+                    return res.status(400).send({ error: `SQL execute error: ${err}` });
                 }
                 if (rows.length === 0) {
-                    return res.json({ error: "Sem resultados para esse usuário" });
+                    return res.status(400).send({ error: "nothing to show" });
                 };
 
                 return res.json(rows);
@@ -75,24 +75,27 @@ exports.show_discipline = async (req, res) => {
     }
 }
 
+//insert grades in student 
 exports.insert_grades = async (req, res) => {
     try {
-        const { student, grape } = req.body;
+        const { student, grades } = req.body;
 
-        const { idDiscipline, idClass } = req.params
+        const { idDiscipline, idClass } = req.params;
 
+        if (grades == null || grades == undefined)
+            return res.status(400).send({ error: 'Verify fields again' })
 
         hanaConnection.connection.connect(hanaConnection.params, err => {
-            if (err) return res.status(401).json({ error: err });
+            if (err) return res.status(400).send({ error: err });
 
-            const sql = `CALL ALTERARNOTA('${grape}', '${student}', '${req.userId}', '${idClass}', '${idDiscipline}');`;
+            const sql = `CALL ALTERARNOTA('${grades}', '${student}', '${req.userId}', '${idClass}', '${idDiscipline}');`;
             hanaConnection.connection.exec(sql, (erro, status) => {
                 hanaConnection.connection.disconnect();
-                if (erro) return res.status(401).json({ error: erro });
+                if (erro) return res.status(400).send({ error: erro });
 
                 if (!status) return res.json({ erro: "Sem retorno" });
 
-                return res.json({ success: status });
+                return res.send({ success: 'successfully updated' });
             });
         });
 

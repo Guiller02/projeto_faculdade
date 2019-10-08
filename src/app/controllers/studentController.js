@@ -25,7 +25,8 @@ exports.show_semester = async (req, res) => {
         }
         hanaConnection.connection.connect(hanaConnection.params, err => {
             if (err) {
-                return res.status(401).json({ erro: `${err}` });
+                console.log(err)
+                return res.status(400).json({ error: 'error in show semester' });
             }
 
             //Show semester and disciplines
@@ -49,7 +50,7 @@ exports.show_semester = async (req, res) => {
                 };
 
                 if (err) {
-                    return res.status(401).json({ error: `SQL execute error: ${err}` });
+                    return res.status(401).json({ error: `SQL execute error` });
                 };
 
                 if (rows.length === 0) {
@@ -61,11 +62,12 @@ exports.show_semester = async (req, res) => {
         });
 
     } catch (err) {
-        return res.status(400).send({ error: 'Error in show semester' })
         console.log(err);
+        return res.status(400).send({ error: 'Error in show semester' })
     }
 };
 
+//show discipline that student has
 exports.show_discipline = async (req, res) => {
     try {
 
@@ -123,4 +125,78 @@ exports.show_discipline = async (req, res) => {
 
 
 };
+
+async function enterCourse(discipline, cod_student, semester, cod_Teacher) {
+    try {
+        await hanaConnection.connection.connect(hanaConnection.params, async  err => {
+            if (err)
+                console.log(err)
+
+            //Show semester and disciplines
+            const sql = `INSERT INTO HISTORICO (INT_ID_DISCIPLINA, ST_COD_ALUNO, IT_SEMESTRE, INT_COD_TURMA, ST_COD_PROFESSOR)
+            values(${discipline}, '${cod_student}', ${semester}, 1,'${cod_Teacher}');`
+
+            await hanaConnection.connection.exec(sql, (async err => {
+                await hanaConnection.connection.disconnect();
+                if (err) {
+                    console.log(err)
+                }
+            }));
+        });
+    } catch (err) {
+        console.log(err);
+        return res.status(400).send({ error: 'Error in show semester' })
+
+    }
+}
+
+exports.enter_course = async (cod_student, course, semester) => {
+    try {
+        console.log('antes do if');
+        if (course == 1) {
+            console.log('primeiro if');
+            if (semester === 1) {
+                console.log('segundo if');
+                await enterCourse(1, cod_student, 1, 'P5127');
+                await enterCourse(2, cod_student, 1, 'P1455');
+            }
+            else if (semester === 2) {
+                console.log('segundo if');
+                await enterCourse(6, cod_student, 2, 'P5127');
+                await enterCourse(7, cod_student, 2, 'P1455');
+            };
+        }
+        else if (course == 2) {
+            console.log('primeiro if');
+            if (semester == 1) {
+                console.log('segundo if');
+                enterCourse(22, cod_student, 1, 'P4996');
+                enterCourse(23, cod_student, 1, 'P5005');
+            }
+            else if (semester == 2) {
+                console.log('segundo if');
+                enterCourse(26, cod_student, 2, 'P5005');
+                enterCourse(27, cod_student, 2, 'P8481');
+            };
+        }
+        else if (course == 3) {
+            console.log('primeiro if');
+            if (semester == 1) {
+                console.log('segundo if');
+                enterCourse(34, cod_student, 1, 'P7554');
+                enterCourse(35, cod_student, 1, 'P9767');
+            }
+            else if (semester == 2) {
+                console.log('segundo if');
+                enterCourse(39, cod_student, 2, 'P7554');
+                enterCourse(40, cod_student, 2, 'P1307');
+            };
+        };
+
+    } catch (err) {
+        console.log(err);
+    };
+
+};
+
 

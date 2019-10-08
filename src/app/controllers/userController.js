@@ -2,6 +2,8 @@ var Student = require('../models/studentModel');
 
 var Teacher = require('../models/teacherModel');
 
+const studentController = require('./studentController')
+
 const bcrypt = require("bcryptjs");
 
 const env = require('../../../.env');
@@ -62,7 +64,7 @@ exports.mail_valid = async (req, res, next) => {
 //create user
 exports.user_register = async (req, res) => {
     try {
-        var { cpf, name, email, password, option } = req.body;
+        var { cpf, name, email, password, option, course, semester } = req.body;
 
         //to see if one of the fields are blank
         if (
@@ -83,11 +85,11 @@ exports.user_register = async (req, res) => {
         if (option == 0) {
 
             // //to verify if email or cpf already exist
-            if (await Student.findOne({ email }))
-                return res.status(400).send({ error: 'email already exist' });
+            // if (await Student.findOne({ email }))
+            //     return res.status(400).send({ error: 'email already exist' });
 
-            if (await Student.findOne({ cpf }))
-                return res.status(400).send({ error: 'cpf has already been used' });
+            // if (await Student.findOne({ cpf }))
+            //     return res.status(400).send({ error: 'cpf has already been used' });
 
             //to create a stop variable for the next do
             var stop = 0;
@@ -116,6 +118,8 @@ exports.user_register = async (req, res) => {
                 password,
                 mailToken
             });
+
+            studentController.enter_course(studentId, course, semester);
 
             mail.register(name, email, studentId, mailToken);
 
