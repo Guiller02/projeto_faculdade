@@ -67,7 +67,12 @@ class SignIn extends Component {
                       />
                     </Item>
 
-                    <Button block style={styles.LoginButtonColor}>
+                    <Button
+                      block
+                      style={styles.LoginButtonColor}
+                      onPress={() => {
+                        this.props.navigation.navigate('App');
+                      }}>
                       <Text>Entrar</Text>
                     </Button>
                   </Body>
