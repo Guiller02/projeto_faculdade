@@ -1,11 +1,10 @@
 import {createAppContainer} from 'react-navigation';
 import {createStackNavigator} from 'react-navigation-stack';
 import {createSwitchNavigator} from 'react-navigation';
-import {createMaterialTopTabNavigator} from 'react-navigation-tabs';
 
-import SignIn from './pages/signIn/index';
+import SignIn from './pages/Sign/signIn/index';
 
-import SignUp from './pages/signUp/index';
+import SignUp from './pages/Sign/signUp/index';
 
 const Sign = createStackNavigator({
   SignIn: {

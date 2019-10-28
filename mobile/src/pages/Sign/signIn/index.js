@@ -17,7 +17,7 @@ import {Grid, Row, Col} from 'react-native-easy-grid';
 
 import {styles} from './style';
 
-class NestedGrid extends Component {
+class SignIn extends Component {
   render() {
     return (
       <Container>
@@ -67,9 +67,7 @@ class NestedGrid extends Component {
                       />
                     </Item>
 
-                    <Button
-                      block
-                      style={({marginTop: 30}, styles.LoginButtonColor)}>
+                    <Button block style={styles.LoginButtonColor}>
                       <Text>Entrar</Text>
                     </Button>
                   </Body>
@@ -105,4 +103,4 @@ class NestedGrid extends Component {
   }
 }
 
-export default NestedGrid;
+export default SignIn;

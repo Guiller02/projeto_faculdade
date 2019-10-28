@@ -19,7 +19,7 @@ import {styles} from './style';
 
 import {Grid, Row} from 'react-native-easy-grid';
 
-export default class index extends Component {
+export default class SignUp extends Component {
   constructor(props) {
     super(props);
     this.state = {

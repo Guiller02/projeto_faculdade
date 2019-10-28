@@ -58,6 +58,7 @@ export const styles = StyleSheet.create({
 
   LoginButtonColor: {
     backgroundColor: '#7B68EE',
+    marginTop: 20,
   },
   LoginFooterCardButton: {
     width: 130,
