@@ -1,13 +1,36 @@
-import { createAppContainer } from 'react-navigation';
-import { createStackNavigator } from 'react-navigation-stack';
-import { createSwitchNavigator } from 'react-navigation';
+import {createAppContainer} from 'react-navigation';
+import {createStackNavigator} from 'react-navigation-stack';
+import {createSwitchNavigator} from 'react-navigation';
+import {createMaterialTopTabNavigator} from 'react-navigation-tabs';
 
-import Login from './pages/signIn/index';
+import SignIn from './pages/signIn/index';
 
-const AppNavigator = createSwitchNavigator({
-  Home: {
-    screen: Login,
+import SignUp from './pages/signUp/index';
+
+const Sign = createStackNavigator({
+  SignIn: {
+    screen: SignIn,
+    navigationOptions: {
+      header: null,
+    },
+  },
+  SignUp: {
+    screen: SignUp,
+    navigationOptions: {
+      title: 'Registrar',
+    },
   },
 });
 
-export default createAppContainer(AppNavigator);
+const Routes = createAppContainer(
+  createSwitchNavigator(
+    {
+      Sign,
+    },
+    {
+      initialRouteName: 'Sign',
+    },
+  ),
+);
+
+export default Routes;

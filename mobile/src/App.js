@@ -1,11 +1,11 @@
-import React from 'react'
-import { View, Text } from 'react-native'
+import React from 'react';
+import {View, Text} from 'react-native';
 
-import Routes from './Routes'
+import './config/StatusBarConfig';
+
+import Routes from './Routes';
 const App = () => {
-  return (
-    <Routes></Routes>
-  )
-}
+  return <Routes></Routes>;
+};
 
-export default App
+export default App;

@@ -12,6 +12,7 @@ import {
   Item,
   Label,
 } from 'native-base';
+
 import {Grid, Row, Col} from 'react-native-easy-grid';
 
 import {styles} from './style';
@@ -23,54 +24,74 @@ class NestedGrid extends Component {
         <Grid>
           <Row style={styles.Login}>
             <Content padder contentContainerStyle={styles.LoginContent}>
-              <Card style={styles.LoginContent}>
-                <CardItem style={styles.LoginHeaderCardIconsBorder}>
+              <Card style={(styles.LoginContent, styles.LoginContentCard)}>
+                <CardItem
+                  style={
+                    (styles.LoginContentCardItem,
+                    styles.LoginHeaderCardIconsBorder)
+                  }>
                   <Body style={styles.LoginHeaderCardIcons}>
-                    <Icon active type="FontAwesome" name="google" />
-                    <Icon active type="FontAwesome" name="facebook" />
-                    <Icon active type="FontAwesome" name="linkedin" />
+                    <Icon
+                      style={styles.LoginIcon}
+                      active
+                      type="FontAwesome"
+                      name="google"
+                    />
+                    <Icon
+                      style={styles.LoginIcon}
+                      active
+                      type="FontAwesome"
+                      name="facebook"
+                    />
+                    <Icon
+                      style={styles.LoginIcon}
+                      active
+                      type="FontAwesome"
+                      name="linkedin"
+                    />
                   </Body>
                 </CardItem>
 
-                <CardItem>
+                <CardItem style={styles.LoginContentCardItem}>
                   <Body>
                     <Item floatingLabel>
-                      <Label style={{justifyContent: 'space-around'}}>
-                        <Icon active name="home" />
-                        <Text>Matrícula</Text>
-                      </Label>
+                      <Label style={styles.LoginText}>Matrícula</Label>
                       <Input />
                     </Item>
 
                     <Item floatingLabel>
-                      <Label style={{justifyContent: 'space-around'}}>
-                        <Icon type="FontAwesome" name="lock" />
-                        <Text> Senha</Text>
-                      </Label>
-                      <Input />
+                      <Label style={styles.LoginText}>Senha</Label>
+                      <Input
+                        secureTextEntry={true}
+                        autoCompleteType="password"
+                      />
                     </Item>
 
-                    <Button block style={{marginTop: 30}}>
+                    <Button
+                      block
+                      style={({marginTop: 30}, styles.LoginButtonColor)}>
                       <Text>Entrar</Text>
                     </Button>
                   </Body>
                 </CardItem>
 
-                <CardItem>
+                <CardItem style={styles.LoginContentCardItem}>
                   <Body style={styles.LoginFooterCard}>
-                    <Text>Não Possuí conta?</Text>
-                    <Button style={styles.LoginFooterCardButton}>
+                    <Button
+                      style={styles.LoginFooterCardButton}
+                      onPress={() => {
+                        this.props.navigation.navigate('SignUp');
+                      }}>
                       <Text style={{textAlign: 'center'}}>
-                        Clique para Registrar-se
+                        Não possuo conta
                       </Text>
                     </Button>
                   </Body>
 
                   <Body style={styles.LoginFooterCard}>
-                    <Text>Esqueceu sua senha?</Text>
                     <Button style={styles.LoginFooterCardButton}>
                       <Text style={{textAlign: 'center'}}>
-                        Clique para Recuperar
+                        Esqueci minha senha
                       </Text>
                     </Button>
                   </Body>
