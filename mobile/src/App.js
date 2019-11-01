@@ -1,3 +1,9 @@
+if (__DEV__) {
+  import('./config/ReactotronConfig').then(() =>
+    console.log('Reactotron Configured'),
+  );
+}
+
 import React from 'react';
 import {View, Text} from 'react-native';
 

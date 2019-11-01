@@ -2,10 +2,6 @@ import React from 'react';
 
 import {StyleSheet} from 'react-native';
 
-import {Container, Label, Input, Item, Content, Button} from 'native-base';
-
-import styled from 'styled-components';
-
 export const styles = StyleSheet.create({
   Login: {
     backgroundColor: '#9370DB',
@@ -58,7 +54,7 @@ export const styles = StyleSheet.create({
 
   LoginButtonColor: {
     backgroundColor: '#7B68EE',
-    marginTop: 20,
+    marginTop: 50,
   },
   LoginFooterCardButton: {
     width: 130,

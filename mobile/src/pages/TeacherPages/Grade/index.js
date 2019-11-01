@@ -9,7 +9,8 @@ export default class index extends Component {
       return (
         <Image
           source={require('../../../images/grade.png')}
-          style={{width: 25, height: 25, color: 'white'}}
+          style={{width: 25, height: 25, color: '#fff'}}
+          tintColor="white"
         />
       );
     },

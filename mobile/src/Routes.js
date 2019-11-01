@@ -4,19 +4,15 @@ import {createSwitchNavigator} from 'react-navigation';
 
 import {createMaterialBottomTabNavigator} from 'react-navigation-material-bottom-tabs';
 
-import SignIn from './pages/Sign/signIn/index';
+import SignIn from './pages/UserPages/Sign/signIn/index';
 
-import SignUp from './pages/Sign/signUp/index';
+import SignUp from './pages/UserPages/Sign/signUp/index';
 
-import Forum from './pages/App/Forum/index';
+import Profile from './pages/UserPages/Profile/index';
 
-import Notas from './pages/App/Grade/index';
+import Student from './pages/StudentPages/StudentRoutes';
 
-import Perfil from './pages/App/Profile/index';
-
-import React from 'react';
-
-import {Icon} from 'react-native';
+import Teacher from './pages/TeacherPages/TeacherRoutes';
 
 const Sign = createStackNavigator({
   SignIn: {
@@ -33,26 +29,11 @@ const Sign = createStackNavigator({
   },
 });
 
-const App = createMaterialBottomTabNavigator(
-  {
-    Forum: {
-      screen: Forum,
-    },
-    Notas,
-    Perfil,
-  },
-  {
-    initialRouteName: 'Forum',
-    activeColor: '#f0edf6',
-    inactiveColor: '#3e2465',
-    barStyle: {backgroundColor: '#694fad'},
-  },
-);
-
 const Routes = createAppContainer(
   createSwitchNavigator({
     Sign,
-    App,
+    Student,
+    Teacher,
   }),
 );
 
