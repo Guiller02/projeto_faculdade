@@ -12,11 +12,14 @@ import reactotron from 'reactotron-react-native';
 export default class index extends Component {
   state = {
     loading: true,
+    docs: [],
   };
-  forum = async () => {
-    await api.get('/student/forum');
-    reactotron.log(api);
-    this.state.loading === false;
+  forum = async e => {
+    try {
+      await api.get('/student/forum');
+      reactotron.log(api);
+      this.setState({loading: false});
+    } catch (e) {}
   };
 
   componentDidMount() {

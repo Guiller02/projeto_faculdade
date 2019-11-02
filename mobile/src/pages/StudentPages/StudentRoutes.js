@@ -2,15 +2,13 @@ import {createAppContainer} from 'react-navigation';
 
 import {createStackNavigator} from 'react-navigation-stack';
 
-import {Text, View} from 'react-native';
+import {Text, Image, View} from 'react-native';
 
 import {createMaterialBottomTabNavigator} from 'react-navigation-material-bottom-tabs';
 
 import React from 'react';
 
 import {Icon} from 'native-base';
-
-import {Image} from 'react-native';
 
 import Forum from './Forum/index';
 
@@ -45,17 +43,19 @@ const ProfileScreen = createStackNavigator({
 const Student = createAppContainer(
   createMaterialBottomTabNavigator(
     {
-      forumScreen: {
+      Forum: {
         screen: forumScreen,
         navigationOptions: {
           tabBarIcon: () => {
             return (
-              <Icon
-                type="MaterialIcons"
-                name="question-answer"
-                style={{color: '#fff'}}
-                size={25}
-              />
+              <View style={{justifyContent: 'center'}}>
+                <Icon
+                  type="MaterialIcons"
+                  name="question-answer"
+                  style={{color: '#fff'}}
+                  size={25}
+                />
+              </View>
             );
           },
         },
@@ -65,11 +65,13 @@ const Student = createAppContainer(
         navigationOptions: {
           tabBarIcon: () => {
             return (
-              <Image
-                source={require('../../images/grade.png')}
-                style={{width: 25, height: 25, color: '#fff'}}
-                tintColor="white"
-              />
+              <View style={{justifyContent: 'center'}}>
+                <Image
+                  source={require('../../images/grade.png')}
+                  style={{width: 25, height: 25, color: '#fff'}}
+                  tintColor="white"
+                />
+              </View>
             );
           },
         },
@@ -78,16 +80,27 @@ const Student = createAppContainer(
         screen: ProfileScreen,
         navigationOptions: {
           tabBarIcon: () => {
-            return <Icon type="MaterialIcons" name="person" size={25} />;
+            return (
+              <View style={{justifyContent: 'center'}}>
+                <Icon
+                  type="MaterialIcons"
+                  name="person"
+                  size={25}
+                  style={{color: '#fff'}}
+                />
+              </View>
+            );
           },
         },
       },
     },
     {
-      initialRouteName: 'forumScreen',
-      activeColor: '#f0edf6',
-      inactiveColor: '#3e2465',
-      barStyle: {backgroundColor: '#694fad'},
+      initialRouteName: 'Forum',
+      activeColor: '#fff',
+      inactiveColor: '#D3D3D3',
+      barStyle: {
+        backgroundColor: '#7B68EE',
+      },
     },
   ),
 );

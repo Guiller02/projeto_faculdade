@@ -64,12 +64,19 @@ class SignIn extends Component {
     try {
       const token = await AsyncStorage.getItem('@Faculade:token');
 
+      reactotron.log('Token:', token);
+
       if (token) {
         const res = await api.get('/auth/isUser');
+        reactotron.log(res);
 
-        const firstRegister = res.data.user.charAt(0);
+        reactotron.log(res.data.user.charAt(0));
 
-        reactotron.log(firstRegister);
+        reactotron.log(res);
+
+        let firstRegister = res.data.user.charAt(0);
+
+        reactotron.log('Primeiro registro:', firstRegister);
 
         firstRegister == 'P'
           ? this.props.navigation.navigate('Teacher')
@@ -77,7 +84,7 @@ class SignIn extends Component {
       } else this.setState({loading: false});
     } catch (e) {
       reactotron.log(e);
-      this.setState({loading: true});
+      this.setState({loading: false});
     }
   };
 

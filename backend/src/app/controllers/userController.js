@@ -429,7 +429,7 @@ exports.is_user = async (req, res) => {
     const user = req.userId;
 
     if (await Teacher.findOne({ cod_Teacher: req.userId })) {
-      return res.send(req.userId);
+      return res.send({ user: user });
     } else if (await Student.findOne({ cod_student: req.userId })) {
       const { points } = await Student.findOne({ cod_student: req.userId });
 

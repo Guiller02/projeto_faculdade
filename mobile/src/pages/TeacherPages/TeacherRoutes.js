@@ -2,27 +2,77 @@ import {createAppContainer} from 'react-navigation';
 import {createStackNavigator} from 'react-navigation-stack';
 import {createSwitchNavigator} from 'react-navigation';
 
+import {Text, Image, View} from 'react-native';
+
+import React from 'react';
+
+import {Icon} from 'native-base';
+
 import {createMaterialBottomTabNavigator} from 'react-navigation-material-bottom-tabs';
 
 import Grade from './Grade/index';
 
 import Profile from '../UserPages/Profile/index';
 
+const GradeScreen = createStackNavigator({
+  Notas: {
+    screen: Grade,
+    navigationOptions: {
+      header: null,
+    },
+  },
+});
+
+const ProfileScreen = createStackNavigator({
+  Perfil: {
+    screen: Profile,
+  },
+});
+
 const Teacher = createAppContainer(
   createMaterialBottomTabNavigator(
     {
       Notas: {
-        screen: Grade,
+        screen: GradeScreen,
+        navigationOptions: {
+          tabBarIcon: () => {
+            return (
+              <View style={{justifyContent: 'center'}}>
+                <Image
+                  source={require('../../images/grade.png')}
+                  style={{width: 25, height: 25, color: '#fff'}}
+                  tintColor="white"
+                />
+              </View>
+            );
+          },
+        },
       },
       Perfil: {
-        screen: Profile,
+        screen: ProfileScreen,
+        navigationOptions: {
+          tabBarIcon: () => {
+            return (
+              <View style={{justifyContent: 'center'}}>
+                <Icon
+                  type="MaterialIcons"
+                  name="person"
+                  size={25}
+                  style={{color: '#fff'}}
+                />
+              </View>
+            );
+          },
+        },
       },
     },
     {
       initialRouteName: 'Notas',
-      activeColor: '#f0edf6',
-      inactiveColor: '#3e2465',
-      barStyle: {backgroundColor: '#694fad'},
+      activeColor: '#fff',
+      inactiveColor: '#D3D3D3',
+      barStyle: {
+        backgroundColor: '#7B68EE',
+      },
     },
   ),
 );

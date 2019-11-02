@@ -21,7 +21,7 @@ exports.show_semester = async (req, res) => {
     if (!isStudent) {
       return res.status(401).json({ error: "user not found" });
     }
-    hanaConnection.connection.connect(hanaConnection.params, err => {
+    hanaConnection.connection.connect(hanaConnection.params, (err) => {
       if (err) {
         console.log(err);
         return res.status(400).json({ error: "error in show semester" });
@@ -73,7 +73,7 @@ exports.show_discipline = async (req, res) => {
       return res.status(401).json({ error: "user not found" });
     }
 
-    hanaConnection.connection.connect(hanaConnection.params, err => {
+    hanaConnection.connection.connect(hanaConnection.params, (err) => {
       if (err) {
         console.log(err);
         return res.status(400).send({ error: "error in show disciplines" });
@@ -123,14 +123,14 @@ async function enterCourse(discipline, cod_student, semester, cod_Teacher) {
   try {
     await hanaConnection.connection.connect(
       hanaConnection.params,
-      async err => {
+      async (err) => {
         if (err) console.log(err);
 
         //Show semester and disciplines
         const sql = `INSERT INTO HISTORICO (INT_ID_DISCIPLINA, ST_COD_ALUNO, IT_SEMESTRE, INT_COD_TURMA, ST_COD_PROFESSOR)
             values(${discipline}, '${cod_student}', ${semester}, 1,'${cod_Teacher}');`;
 
-        await hanaConnection.connection.exec(sql, async err => {
+        await hanaConnection.connection.exec(sql, async (err) => {
           await hanaConnection.connection.disconnect();
           if (err) {
             console.log(err);
@@ -156,7 +156,7 @@ exports.enter_course = async (cod_student, course, semester) => {
       } else if (semester === 2) {
         console.log("segundo if");
         await enterCourse(6, cod_student, 2, "P5127");
-        await enterCourse(7, cod_student, 2, "P1455");
+        await enterCourse(8, cod_student, 2, "P1455");
       }
     } else if (course == 2) {
       console.log("primeiro if");
