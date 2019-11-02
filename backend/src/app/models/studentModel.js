@@ -1,69 +1,68 @@
-const mongoose = require('../../db/mongo');
+const mongoose = require("../../db/mongo");
 
-const bcrypt = require('bcryptjs');
+const bcrypt = require("bcryptjs");
 
 const StudentSchema = new mongoose.Schema({
-    cod_student: {
-        type: String,
-        required: true,
-    },
-    cpf: {
-        type: String,
-        required: true
-    },
-    name: {
-        type: String,
-        required: true
-    },
-    email: {
-        type: String,
-        required: true,
-    },
-    solutions: {
-        type: Number,
-        required: true,
-        default: 0
-    },
-    points: {
-        type: Number,
-        default: 1,
-        required: true
-    },
-    password: {
-        type: String,
-        required: true,
-        select: false
-    },
-    passwordResetToken: {
-        type: String,
-        select: false
-    },
-    passwordResetExpires: {
-        type: Date,
-        select: false
-    },
-    createdAt: {
-        type: Date,
-        default: Date.now
-    },
-    mailToken: {
-        type: String,
-        select: false
-    },
-    active: {
-        type: Boolean,
-        default: false,
-        required: true,
-        select: false
-    }
-
+  cod_student: {
+    type: String,
+    required: true
+  },
+  cpf: {
+    type: String,
+    required: true
+  },
+  name: {
+    type: String,
+    required: true
+  },
+  email: {
+    type: String,
+    required: true
+  },
+  solutions: {
+    type: Number,
+    required: true,
+    default: 0
+  },
+  points: {
+    type: Number,
+    default: 1,
+    required: true
+  },
+  password: {
+    type: String,
+    required: true,
+    select: false
+  },
+  passwordResetToken: {
+    type: String,
+    select: false
+  },
+  passwordResetExpires: {
+    type: Date,
+    select: false
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now
+  },
+  mailToken: {
+    type: String,
+    select: false
+  },
+  active: {
+    type: Boolean,
+    default: false,
+    required: true,
+    select: false
+  }
 });
 
-StudentSchema.pre("save", async function (next) {
-    const hash = await bcrypt.hash(this.password, 10);
-    this.password = hash;
+StudentSchema.pre("save", async function(next) {
+  const hash = await bcrypt.hash(this.password, 10);
+  this.password = hash;
 
-    next();
+  next();
 });
 
 const Student = mongoose.model("Student", StudentSchema);

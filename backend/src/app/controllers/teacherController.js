@@ -73,28 +73,49 @@ exports.show_students = async (req, res) => {
 
 //insert grades in student
 exports.insert_grades = async (req, res) => {
-  try {
-    const { student, grades } = req.body;
+  const { materia, usuarios } = req.body;
+  const errorStatus = [];
 
-    const { idDiscipline, idClass } = req.params;
-
-    if (grades == null || grades == undefined)
-      return res.status(400).send({ error: "Verify fields again" });
-
+  const hanaPromisify = promisify(
     hanaConnection.connection.connect(hanaConnection.params, err => {
-      if (err) return res.status(400).send({ error: err });
+      let sql = "";
 
-      const sql = `CALL ALTERARNOTA('${grades}', '${student}', '${req.userId}', '${idClass}', '${idDiscipline}');`;
-      hanaConnection.connection.exec(sql, (erro, status) => {
-        hanaConnection.connection.disconnect();
-        if (erro) return res.status(400).send({ error: erro });
+      usuarios.forEach(usuario => {
+        sql = `CALL ALTERARNOTA(${usuario.nota}, '${usuario.cod_aluno}', '${req.professorToken}', ${materia.turma}, ${materia.disciplina});`;
+        hanaConnection.connection.exec(sql, (erro, status) => {
+          hanaConnection.connection.disconnect();
+          if (erro) {
+            return res.status(500).json({
+              erro: "Erro interno no servidor"
+            });
+          }
 
-        if (!status) return res.json({ erro: "Sem retorno" });
-
-        return res.send({ success: "successfully updated" });
+          if (status === 0) {
+            errorStatus.push(usuario.cod_aluno);
+          }
+        });
       });
-    });
-  } catch (err) {
-    console.log(err);
-  }
+
+      if (err) return res.status(400).send({ error: "bad request" });
+    })
+  );
+
+  (async function() {
+    try {
+      await hanaPromisify;
+      console.log("deu");
+    } catch (error) {
+      console.log(error);
+    }
+  });
+
+  await res.json(
+    errorStatus
+      ? {
+          error: `Não foi possível lançar as notas dos alunos: ${errorStatus.toString()}`
+        }
+      : { success: "Lançadas" }
+  );
+
+  console.log("FIM");
 };

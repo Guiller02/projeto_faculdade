@@ -13,6 +13,7 @@ const mail = require("../../services/mail");
 const jwt = require("jsonwebtoken");
 
 // Generate token
+<<<<<<< HEAD
 function generateToken(params = {}, option) {
   if (option == 1) {
     return jwt.sign(params, env.secret, {
@@ -23,6 +24,10 @@ function generateToken(params = {}, option) {
       expiresIn: "4h"
     });
   }
+=======
+function generateToken(params = {}) {
+  return jwt.sign(params, env.secret, {});
+>>>>>>> 2214db23c8e3a503893ed6e7eb87193f6439d2d9
 }
 
 exports.mail_valid = async (req, res, next) => {
@@ -37,7 +42,11 @@ exports.mail_valid = async (req, res, next) => {
       if (active == true) {
         return next();
       } else {
+<<<<<<< HEAD
         return res.send({ error: "Verify email to see this" });
+=======
+        return res.status(401).send({ error: "Verify email to see this" });
+>>>>>>> 2214db23c8e3a503893ed6e7eb87193f6439d2d9
       }
     } else if (firstRegister == "P") {
       const { active } = await Teacher.findOne({
@@ -47,7 +56,11 @@ exports.mail_valid = async (req, res, next) => {
       if (active == true) {
         return next();
       } else {
+<<<<<<< HEAD
         return res.send({ error: "Verify email to see this" });
+=======
+        return res.status(401).send({ error: "Verify email to see this" });
+>>>>>>> 2214db23c8e3a503893ed6e7eb87193f6439d2d9
       }
     }
   } catch (err) {
@@ -75,6 +88,7 @@ exports.user_register = async (req, res) => {
     function random() {
       return Math.floor(Math.random() * 8999 + 1000);
     }
+<<<<<<< HEAD
 
     //option 0 for students
     if (option == 0) {
@@ -109,6 +123,38 @@ exports.user_register = async (req, res) => {
       //to create a new student
       const createdStudent = await Student.create({
         cod_student: studentId,
+=======
+
+    //option 0 for students
+    if (option == 0) {
+      // //to verify if email or cpf already exist
+      if (await Student.findOne({ email }))
+        return res.status(400).send({ error: "email already exist" });
+
+      if (await Student.findOne({ cpf }))
+        return res.status(400).send({ error: "cpf has already been used" });
+
+      //to create a stop variable for the next do
+      var stop = 0;
+      do {
+        //create a new student register with randomic number
+        var studentId = "A" + random();
+
+        //if does not have a student with this register, stop will receive 1 and will stop the do
+        if (!(await Student.findOne({ cod_student: studentId }))) stop = 1;
+
+        //if found a student with this register, will create another register
+      } while (stop == 0);
+
+      const mailToken =
+        "A" +
+        generateToken({
+          id: email
+        });
+
+      //to create a new student
+      const createdStudent = await Student.create({
+        cod_student: studentId,
         cpf,
         name,
         email,
@@ -116,6 +162,59 @@ exports.user_register = async (req, res) => {
         mailToken
       });
 
+      studentController.enter_course(studentId, course, semester);
+
+      mail.register(name, email, studentId, mailToken);
+
+      //to not return password
+      createdStudent.password = undefined;
+
+      return res.send({
+        createdStudent,
+        token: generateToken({
+          id: studentId
+        })
+      });
+    }
+    //option 1 for teachers
+    if (option == 1) {
+      // //to verify if email or cpf already exist
+      if (await Teacher.findOne({ email }))
+        return res.status(400).send({ error: "email already exist" });
+
+      if (await Teacher.findOne({ cpf }))
+        return res.status(400).send({ error: "cpf has already been used" });
+
+      //to create a stop variable for the next do
+      var stop = 0;
+      do {
+        //create a new Teacher register with randomic number
+        var teacherId = "P" + random();
+
+        //if does not have a student with this register, stop will receive 1 and will stop the do
+        if (!(await Teacher.findOne({ cod_Teacher: teacherId }))) stop = 1;
+
+        //if found a student with this register, will create another register
+      } while (stop == 0);
+
+      const mailToken =
+        "P" +
+        generateToken({
+          id: email
+        });
+
+      //to create a new student
+      const createdTeacher = await Teacher.create({
+        cod_Teacher: teacherId,
+>>>>>>> 2214db23c8e3a503893ed6e7eb87193f6439d2d9
+        cpf,
+        name,
+        email,
+        password,
+        mailToken
+      });
+
+<<<<<<< HEAD
       studentController.enter_course(studentId, course, semester);
 
       mail.register(name, email, studentId, mailToken);
@@ -188,6 +287,20 @@ exports.user_register = async (req, res) => {
         )
       });
     }
+=======
+      mail.register(name, email, teacherId, mailToken);
+
+      //to not return password
+      createdTeacher.password = undefined;
+
+      return res.send({
+        createdTeacher,
+        token: generateToken({
+          id: teacherId
+        })
+      });
+    }
+>>>>>>> 2214db23c8e3a503893ed6e7eb87193f6439d2d9
   } catch (err) {
     res.status(400).send({ error: "Error in create new user" });
     console.log(err);
@@ -443,3 +556,22 @@ exports.user_authenticate_email = async (req, res) => {
     return res.send("Token inválido");
   }
 };
+<<<<<<< HEAD
+=======
+
+exports.is_user = async (req, res) => {
+  try {
+    const user = req.userId;
+
+    if (await Teacher.findOne({ cod_Teacher: req.userId })) {
+      return res.send({ user: user });
+    } else if (await Student.findOne({ cod_student: req.userId })) {
+      const { points } = await Student.findOne({ cod_student: req.userId });
+
+      return res.send({ user, points });
+    }
+  } catch (err) {
+    return res.status(400).send({ error: "error in show user" });
+  }
+};
+>>>>>>> 2214db23c8e3a503893ed6e7eb87193f6439d2d9
