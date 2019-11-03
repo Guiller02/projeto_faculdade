@@ -8,11 +8,11 @@ import SignIn from './pages/UserPages/Sign/signIn/index';
 
 import SignUp from './pages/UserPages/Sign/signUp/index';
 
-import Profile from './pages/UserPages/Profile/index';
-
 import Student from './pages/StudentPages/StudentRoutes';
 
 import Teacher from './pages/TeacherPages/TeacherRoutes';
+
+import './config/StatusBarConfig';
 
 const Sign = createStackNavigator({
   SignIn: {

@@ -4,7 +4,6 @@ import {View, Image} from 'react-native';
 
 import {
   Container,
-  Header,
   Content,
   List,
   ListItem,
@@ -13,11 +12,14 @@ import {
   Left,
   Body,
   Right,
+  Item,
+  Icon,
+  Input,
 } from 'native-base';
 
 import Loading from '../../../helpers/loading';
 
-import {Table, Row, Rows} from 'react-native-table-component';
+import Header from '../Layouts/Header';
 
 import api from '../../../services/api';
 
@@ -47,20 +49,63 @@ export default class index extends Component {
     }
   };
 
+  loadPoints = async () => {
+    res = await api.get('/student/points');
+
+    this.setState({points: res.data.points});
+  };
+
   componentDidMount() {
     this.loadGrades();
+    this.loadPoints();
+    this.props.navigation.addListener('didFocus', payload => {
+      this.setState({loading: true});
+      this.loadGrades();
+      this.loadPoints();
+    });
   }
 
   render() {
-    let grade;
-
     if (this.state.loading === true) {
       return <Loading />;
     } else
       return (
         <Container>
           <Content>
-            <Header style={{backgroundColor: '#7B68EE'}}></Header>
+            <Header
+              androidStatusBarColor="#7B68EE"
+              iosBarStyle="light-content"
+              searchBar
+              rounded
+              style={{
+                backgroundColor: '#7B68EE',
+                flexDirection: 'row',
+                justifyContent: 'center',
+              }}>
+              <Item>
+                <Icon name="ios-search" />
+                <Input placeholder="Search" />
+              </Item>
+              <Button transparent>
+                <Text>Search</Text>
+              </Button>
+              <View
+                style={{
+                  flexDirection: 'row',
+                  justifyContent: 'flex-end',
+                  alignItems: 'center',
+                }}>
+                <Text style={{fontSize: 20, color: '#daa520'}}>
+                  {this.state.points}
+                </Text>
+                <Icon
+                  style={{color: '#daa520'}}
+                  type="MaterialIcons"
+                  name="grade"
+                />
+              </View>
+            </Header>
+
             <List
               dataArray={this.state.data}
               renderRow={data => (

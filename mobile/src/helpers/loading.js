@@ -10,7 +10,7 @@ export default class Loading extends Component {
   render() {
     return (
       <View style={{flex: 1, justifyContent: 'center', alignItems: 'center'}}>
-        <Spinner size={this.state.size} type="ThreeBounce" color="#9370DB" />
+        <Spinner size={this.state.size} type="ThreeBounce" color="#7B68EE" />
       </View>
     );
   }

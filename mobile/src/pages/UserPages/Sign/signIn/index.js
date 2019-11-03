@@ -53,7 +53,9 @@ class SignIn extends Component {
 
         firstRegister == 'P'
           ? this.props.navigation.navigate('Teacher')
-          : this.props.navigation.navigate('Student');
+          : this.props.navigation.navigate('Student', {
+              Points: res.data.points,
+            });
       }
     } catch (err) {
       Alert.alert('Erro na autenticação', 'Usuário inválido');

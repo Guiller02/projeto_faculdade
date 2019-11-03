@@ -10,7 +10,9 @@ import React from 'react';
 
 import {Icon} from 'native-base';
 
-import Forum from './Forum/index';
+import Questions from './Forum/Questions/index';
+
+import NewQuestion from './Forum/NewQuestion/index';
 
 import Grade from './Grade/index';
 
@@ -18,7 +20,13 @@ import Profile from '../UserPages/Profile/index';
 
 const forumScreen = createStackNavigator({
   Forum: {
-    screen: Forum,
+    screen: Questions,
+    navigationOptions: {
+      header: null,
+    },
+  },
+  NewQuestion: {
+    screen: NewQuestion,
     navigationOptions: {
       header: null,
     },
@@ -37,6 +45,9 @@ const GradeScreen = createStackNavigator({
 const ProfileScreen = createStackNavigator({
   Perfil: {
     screen: Profile,
+    navigationOptions: {
+      header: null,
+    },
   },
 });
 
