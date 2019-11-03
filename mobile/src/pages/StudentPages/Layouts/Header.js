@@ -32,11 +32,11 @@ export default class Nav extends Component {
         }}>
         <Item>
           <Icon name="ios-search" />
-          <Input placeholder="Search" />
+          <Input placeholder="Procurar" />
         </Item>
 
         <Button transparent>
-          <Text>Search</Text>
+          <Text>Procurar</Text>
         </Button>
 
         <View

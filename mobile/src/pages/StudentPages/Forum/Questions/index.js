@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 
-import {View, TouchableOpacity, Image} from 'react-native';
+import {View, TouchableOpacity} from 'react-native';
 
 import Loading from '../../../../helpers/loading';
 
@@ -75,10 +75,10 @@ export default class index extends Component {
             style={styles.header}>
             <Item>
               <Icon name="ios-search" />
-              <Input placeholder="Search" />
+              <Input placeholder="Procurar" />
             </Item>
             <Button transparent>
-              <Text>Search</Text>
+              <Text>Procurar</Text>
             </Button>
             <View style={styles.headerCenterIcons}>
               <Text style={{fontSize: 20, color: '#daa520'}}>
@@ -98,16 +98,26 @@ export default class index extends Component {
               keyExtractor={(data, index) => data._id}
               renderRow={data => (
                 <ListItem>
-                  <TouchableOpacity style={styles.list}>
-                    <View>
-                      <Body>
-                        <Text>{data.title}</Text>
+                  <TouchableOpacity
+                    onPress={() =>
+                      this.props.navigation.navigate('Question', {
+                        Question: data,
+                      })
+                    }
+                    style={styles.list}>
+                    <Body>
+                      <Text>{data.title}</Text>
 
-                        <Text>{data.username}</Text>
+                      <Text>{data.username}</Text>
 
-                        <Text>{data.data.substring(0, 10)}</Text>
-                      </Body>
-                    </View>
+                      <Text>
+                        {data.data.substring(8, 10) +
+                          '-' +
+                          data.data.substring(5, 7) +
+                          '-' +
+                          data.data.substring(0, 4)}
+                      </Text>
+                    </Body>
 
                     <Right style={styles.listRightElements}>
                       <Text style={{paddingRight: 15}}>

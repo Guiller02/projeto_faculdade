@@ -21,6 +21,8 @@ import Loading from '../../../helpers/loading';
 
 import {View, TouchableOpacity} from 'react-native';
 
+import AsyncStorage from '@react-native-community/async-storage';
+
 export default class CardExample extends Component {
   state = {
     register: '',
@@ -45,8 +47,12 @@ export default class CardExample extends Component {
     reactotron.log(this.state.data);
 
     this.setState({loading: false});
+  };
 
-    // http://localhost:3000/auth/profile/
+  removeValue = async () => {
+    await AsyncStorage.removeItem('@Faculade:token');
+
+    this.props.navigation.navigate('Sign');
   };
 
   componentDidMount() {
@@ -81,40 +87,24 @@ export default class CardExample extends Component {
                       </Right>
                     </View>
 
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                      }}>
-                      <Text> {this.state.data.data.email}</Text>
-                      <Icon type="MaterialIcons" name="mail"></Icon>
-                    </View>
+                    <Text>{this.state.data.data.email}</Text>
 
-                    <View
-                      style={{
-                        flexDirection: 'row',
-                        justifyContent: 'center',
-                        alignItems: 'center',
-                      }}>
-                      <Text>
-                        {'(' +
-                          this.state.data.data.phoneNumber.substring(0, 2) +
-                          ')' +
-                          ' ' +
-                          this.state.data.data.phoneNumber.substring(3, 7) +
-                          '-' +
-                          this.state.data.data.phoneNumber.substring(7, 13)}
-                      </Text>
-                      <Icon type="FontAwesome" name="phone"></Icon>
-                    </View>
+                    <Text>
+                      {'(' +
+                        this.state.data.data.phoneNumber.substring(0, 2) +
+                        ')' +
+                        ' ' +
+                        this.state.data.data.phoneNumber.substring(3, 7) +
+                        '-' +
+                        this.state.data.data.phoneNumber.substring(7, 13)}
+                    </Text>
                   </Body>
                 </CardItem>
 
                 <CardItem style={{borderWidth: 5, borderColor: '#d1d1d1'}}>
                   <Body>
                     <Text style={{marginBottom: 4}}>
-                      Sua Matéria favorita:{' '}
+                      Sua matéria favorita:{' '}
                       {this.state.data.data.favoritCollegeSubject}
                     </Text>
 
@@ -142,7 +132,7 @@ export default class CardExample extends Component {
                       </TouchableOpacity>
 
                       <Right>
-                        <TouchableOpacity>
+                        <TouchableOpacity onPress={this.removeValue}>
                           <Text style={{color: 'blue'}}>Sair do perfil</Text>
                         </TouchableOpacity>
                       </Right>
@@ -157,13 +147,9 @@ export default class CardExample extends Component {
         return (
           <Container>
             <Content>
-              <Card>
-                <CardItem>
-                  <Body>
-                    <Text>Professor</Text>
-                  </Body>
-                </CardItem>
-              </Card>
+              <TouchableOpacity onPress={this.removeValue}>
+                <Text style={{color: 'blue'}}>Sair do perfil</Text>
+              </TouchableOpacity>
             </Content>
           </Container>
         );

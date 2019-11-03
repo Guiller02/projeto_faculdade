@@ -18,20 +18,44 @@ import Grade from './Grade/index';
 
 import Profile from '../UserPages/Profile/index';
 
-const forumScreen = createStackNavigator({
-  Forum: {
-    screen: Questions,
-    navigationOptions: {
-      header: null,
+import Question from './Forum/Question/index';
+
+const forumScreen = createStackNavigator(
+  {
+    Forum: {
+      screen: Questions,
+      navigationOptions: {
+        header: null,
+      },
+    },
+    NewQuestion: {
+      screen: NewQuestion,
+    },
+    Question: {
+      screen: Question,
+      navigationOptions: {
+        header: null,
+      },
     },
   },
-  NewQuestion: {
-    screen: NewQuestion,
-    navigationOptions: {
-      header: null,
+  {
+    defaultNavigationOptions: {
+      headerLayoutPreset: 'center',
+      headerTitleStyle: {
+        color: 'white',
+        fontFamily: 'OpenSans',
+      },
+
+      headerStyle: {
+        backgroundColor: '#7B68EE',
+        textAlign: 'center',
+      },
+
+      headerTintColor: '#fff',
     },
+    headerLayoutPreset: 'center',
   },
-});
+);
 
 const GradeScreen = createStackNavigator({
   Notas: {

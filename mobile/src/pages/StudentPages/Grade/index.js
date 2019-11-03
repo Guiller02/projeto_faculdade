@@ -43,10 +43,7 @@ export default class index extends Component {
       reactotron.log(this.state.data);
 
       this.setState({loading: false});
-    } catch (err) {
-      this.setState({loading: false});
-      reactotron.log(err);
-    }
+    } catch (err) {}
   };
 
   loadPoints = async () => {
