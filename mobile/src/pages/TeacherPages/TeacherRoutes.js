@@ -10,16 +10,21 @@ import {Icon} from 'native-base';
 
 import {createMaterialBottomTabNavigator} from 'react-navigation-material-bottom-tabs';
 
-import Grade from './Grade/index';
+import AllDisciplines from './Grade/AllDisciplines/index';
 
 import Profile from '../UserPages/Profile/index';
 
+import Class from './Grade/Class/index';
+
 const GradeScreen = createStackNavigator({
   Notas: {
-    screen: Grade,
+    screen: AllDisciplines,
     navigationOptions: {
       header: null,
     },
+  },
+  Class: {
+    screen: Class,
   },
 });
 

@@ -52,6 +52,7 @@ export default class NewQuestion extends Component {
             </TouchableOpacity>
           </Left>
           <Body></Body>
+
           <Right>
             <TouchableOpacity transparent onPress={() => this.sendQuestion()}>
               <Text style={{color: '#fff'}}>Enviar</Text>

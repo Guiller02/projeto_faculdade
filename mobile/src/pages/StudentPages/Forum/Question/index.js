@@ -15,7 +15,6 @@ import {
   Icon,
   Header,
   Left,
-  Body,
 } from 'native-base';
 
 import Loading from '../../../../helpers/loading';
@@ -32,7 +31,6 @@ export default class Question extends Component {
     loading: true,
     answers: [],
     solution: '',
-    ordenedAnswers: [],
   };
 
   sendSolution = async () => {
@@ -116,6 +114,7 @@ export default class Question extends Component {
               </Right>
             </View>
           </Header>
+
           <Content>
             <Card>
               <CardItem>

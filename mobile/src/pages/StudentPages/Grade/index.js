@@ -195,7 +195,7 @@ export default class index extends Component {
                           <Text></Text>
                         </Button>
 
-                        <Text style={{fontSize: 10, paddingLeft: 2}}>
+                        <Text style={{fontSize: 8, paddingLeft: 2}}>
                           Reprovado
                         </Text>
                       </Right>
@@ -208,107 +208,4 @@ export default class index extends Component {
         </Container>
       );
   }
-}
-{
-  /* <List
-              dataArray={this.state.data}
-              renderRow={data => (
-                <View>
-                  <ListItem style={{justifyContent: 'center'}}>
-                    <Left>
-                      <Text>{data.ST_NOME_DISCIPLINA}</Text>
-                    </Left>
-
-                    {data.FL_NOTA_ALUNO === '-' && (
-                      <Body
-                        style={{
-                          flexDirection: 'row',
-                          justifyContent: 'flex-start',
-                          alignContent: 'center',
-                        }}>
-                        <Text>-----</Text>
-
-                        <Text>{data.IT_SEMESTRE}ºSemestre</Text>
-                      </Body>
-                    )}
-
-                    {data.FL_NOTA_ALUNO > -1 && (
-                      <Body
-                        style={{
-                          flexDirection: 'row',
-                          justifyContent: 'flex-start',
-                        }}>
-                        <Text>{data.FL_NOTA_ALUNO.toFixed(1)}</Text>
-
-                        <Text>{data.IT_SEMESTRE}º Semestre</Text>
-                      </Body>
-                    )}
-
-                    {data.FL_NOTA_ALUNO === '-' && (
-                      <Right
-                        style={{
-                          flexDirection: 'row',
-                          alignItems: 'center',
-                          justifyContent: 'flex-start',
-                        }}>
-                        <Button
-                          disabled
-                          style={{
-                            width: 10,
-                            height: 10,
-                            borderRadius: 44 / 2,
-                            backgroundColor: 'blue',
-                          }}>
-                          <Text></Text>
-                        </Button>
-
-                        <Text style={{fontSize: 10, paddingLeft: 2}}>
-                          Cursando
-                        </Text>
-                      </Right>
-                    )}
-
-                    {data.FL_NOTA_ALUNO >= 6 && (
-                      <Right
-                        style={{flexDirection: 'row', alignItems: 'center'}}>
-                        <Button
-                          disabled
-                          style={{
-                            width: 12,
-                            height: 12,
-                            borderRadius: 44 / 2,
-                            backgroundColor: 'green',
-                          }}>
-                          <Text></Text>
-                        </Button>
-
-                        <Text style={{fontSize: 10, paddingLeft: 2}}>
-                          Aprovado
-                        </Text>
-                      </Right>
-                    )}
-
-                    {data.FL_NOTA_ALUNO < 6 && (
-                      <Right
-                        style={{flexDirection: 'row', alignItems: 'center'}}>
-                        <Button
-                          disabled
-                          style={{
-                            width: 12,
-                            height: 12,
-                            borderRadius: 44 / 2,
-                            backgroundColor: 'red',
-                          }}>
-                          <Text></Text>
-                        </Button>
-
-                        <Text style={{fontSize: 10, paddingLeft: 2}}>
-                          Reprovado
-                        </Text>
-                      </Right>
-                    )}
-                  </ListItem>
-                </View>
-              )}
-            /> */
 }
