@@ -25,12 +25,12 @@ exports.show_students = async (req, res) => {
 
     console.log(idDiscipline);
 
-    hanaConnection.connection.connect(hanaConnection.params, err => {
+    hanaConnection.connection.connect(hanaConnection.params, (err) => {
       if (err) {
         console.log(err);
         return res.status(400).send({ error: "error in show disciplines" });
       }
-      const sql = `SELECT DISCIPLINA.ST_NOME_DISCIPLINA, HISTORICO.ST_COD_ALUNO, HISTORICO.FL_NOTA_ALUNO
+      const sql = `SELECT DISCIPLINA.ST_NOME_DISCIPLINA, HISTORICO.ST_COD_ALUNO,HISTORICO.FL_NOTA_ALUNO, HISTORICO.FL_NOTA_ALUNO as grade
               FROM HISTORICO
               JOIN DISCIPLINA
               ON HISTORICO.INT_ID_DISCIPLINA = DISCIPLINA.INT_ID_DISCIPLINA
@@ -71,51 +71,83 @@ exports.show_students = async (req, res) => {
   }
 };
 
+//show students this teacher gives lesson with the class id of class and discipline
+exports.showAllDisciplines = async (req, res) => {
+  try {
+    const isTeacher = await Teacher.findOne({ cod_Teacher: req.userId });
+
+    if (!isTeacher) {
+      return res.status(401).json({ error: "user not found" });
+    }
+
+    hanaConnection.connection.connect(hanaConnection.params, (err) => {
+      if (err) {
+        console.log(err);
+        return res.status(400).send({ error: "error in show disciplines" });
+      }
+      const sql = `SELECT DISCIPLINA.ST_NOME_DISCIPLINA, HISTORICO.INT_ID_DISCIPLINA, 
+              HISTORICO.INT_COD_TURMA,COUNT(HISTORICO.ST_COD_ALUNO) AS CONTACODALUNO, COUNT(HISTORICO.FL_NOTA_ALUNO) as CONTNOTAALUNO
+              FROM HISTORICO
+              JOIN DISCIPLINA
+              ON HISTORICO.INT_ID_DISCIPLINA = DISCIPLINA.INT_ID_DISCIPLINA
+              WHERE HISTORICO.ST_COD_PROFESSOR = '${isTeacher.cod_Teacher}'
+              GROUP BY DISCIPLINA.ST_NOME_DISCIPLINA,HISTORICO.INT_ID_DISCIPLINA,HISTORICO.INT_COD_TURMA
+              ORDER BY CONTNOTAALUNO DESC
+              
+              ;`;
+
+      hanaConnection.connection.exec(sql, async (err, rows) => {
+        hanaConnection.connection.disconnect();
+
+        if (err) {
+          console.log(err);
+          return res.status(400).send({ error: `SQL execute error: ${err}` });
+        }
+        if (rows.length === 0) {
+          return res.status(400).send({ error: "nothing to show" });
+        }
+
+        return res.send(rows);
+      });
+    });
+  } catch (err) {
+    res.status(400).send({ error: "error in show discipline" });
+    console.log(err);
+  }
+};
+
 //insert grades in student
 exports.insert_grades = async (req, res) => {
-  const { materia, usuarios } = req.body;
+  const { discipline } = req.body;
+
+  const { users } = discipline;
+
   const errorStatus = [];
 
-  const hanaPromisify = promisify(
-    hanaConnection.connection.connect(hanaConnection.params, err => {
-      let sql = "";
+  console.log(discipline);
 
-      usuarios.forEach(usuario => {
-        sql = `CALL ALTERARNOTA(${usuario.nota}, '${usuario.cod_aluno}', '${req.professorToken}', ${materia.turma}, ${materia.disciplina});`;
-        hanaConnection.connection.exec(sql, (erro, status) => {
-          hanaConnection.connection.disconnect();
-          if (erro) {
-            return res.status(500).json({
-              erro: "Erro interno no servidor"
-            });
-          }
+  // console.log(discipline, "usuarios:", users);
+  hanaConnection.connection.connect(hanaConnection.params, (err) => {
+    let sql = "";
 
-          if (status === 0) {
-            errorStatus.push(usuario.cod_aluno);
-          }
-        });
-      });
-
-      if (err) return res.status(400).send({ error: "bad request" });
-    })
-  );
-
-  (async function() {
-    try {
-      await hanaPromisify;
-      console.log("deu");
-    } catch (error) {
-      console.log(error);
-    }
-  });
-
-  await res.json(
-    errorStatus
-      ? {
-          error: `Não foi possível lançar as notas dos alunos: ${errorStatus.toString()}`
+    users.forEach((user) => {
+      sql = `CALL ALTERARNOTA(${user.GRADE}, '${user.ST_COD_ALUNO}', '${req.userId}', ${discipline.class}, ${discipline.discipline});`;
+      hanaConnection.connection.exec(sql, (error, status) => {
+        hanaConnection.connection.disconnect();
+        if (error) {
+          return res.status(400).json({
+            error: error
+          });
         }
-      : { success: "Lançadas" }
-  );
 
-  console.log("FIM");
+        if (status === 0) {
+          errorStatus.push(user.cod_student);
+        }
+      });
+    });
+
+    res.send({ ok: true });
+
+    if (err) return res.status(401).json({ error: "bad request" });
+  });
 };

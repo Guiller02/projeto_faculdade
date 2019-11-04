@@ -6,22 +6,16 @@ const Student = require("../models/studentModel");
 exports.question_list = async (req, res) => {
   try {
     //to create count of answers for each question
-    var count = [];
 
     //to list only status title userame and data in the list of all questions
-    const questionsList = await Question.find({}, "status title username data")
+    const questionsList = await Question.find(
+      {},
+      "status title username data answers userRegister"
+    )
       .sort({ data: "desc" })
       .exec();
 
-    //to find all questions for use in forEach
-    const questions = await Question.find()
-      .sort({ data: "desc" })
-      .exec();
-    questions.forEach(question => {
-      //insert into count the number of array lenght in database
-      count.push(question.answers.length);
-    });
-    res.send({ count, questionsList });
+    res.send({ questionsList });
   } catch (err) {
     console.log(err);
     res.send({ error: "error in list questions" });
@@ -67,10 +61,11 @@ exports.question_create = async (req, res) => {
 exports.question_show = async (req, res) => {
   try {
     //to show only this fields on the search
+
     const question = await Question.findById(
       req.params.questionId,
-      "title description username answers answers:data answers.username answers.answer"
-    );
+      "title description userRegister username answers status data answers.data answers.username answers.userRegister answers.answer "
+    ).sort({ "answers.data": "desc" });
 
     res.send({ question });
   } catch (err) {

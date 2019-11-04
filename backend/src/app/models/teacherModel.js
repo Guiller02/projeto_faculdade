@@ -41,6 +41,10 @@ const TeacherSchema = new mongoose.Schema({
     select: false,
     required: true
   },
+  PhoneNumber: {
+    type: String,
+    required: true
+  },
   active: {
     type: Boolean,
     default: false,

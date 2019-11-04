@@ -51,7 +51,16 @@ exports.mail_valid = async (req, res, next) => {
 //create user
 exports.user_register = async (req, res) => {
   try {
-    var { cpf, name, email, password, option, course, semester } = req.body;
+    var {
+      cpf,
+      name,
+      email,
+      password,
+      option,
+      phoneNumber,
+      course,
+      semester
+    } = req.body;
 
     //to see if one of the fields are blank
     if (
@@ -102,7 +111,8 @@ exports.user_register = async (req, res) => {
         name,
         email,
         password,
-        mailToken
+        mailToken,
+        phoneNumber
       });
 
       studentController.enter_course(studentId, course, semester);
@@ -153,7 +163,8 @@ exports.user_register = async (req, res) => {
         name,
         email,
         password,
-        mailToken
+        mailToken,
+        phoneNumber
       });
 
       mail.register(name, email, teacherId, mailToken);
@@ -288,7 +299,7 @@ exports.user_update = async (req, res) => {
       return res.status(401).send({ error: "invalid user" });
 
     //to return first register to see if the user is student or teacher
-    const { name, password, email, cpf } = req.body;
+    const { name, password, email, cpf, favoritCollegeSubject } = req.body;
     const firstRegister = req.userId.charAt(0);
 
     //if the first register start with A, is student, or if start with P, is teacher
@@ -328,7 +339,8 @@ exports.user_update = async (req, res) => {
         {
           name,
           email,
-          cpf
+          cpf,
+          favoritCollegeSubject
         },
         { new: true }
       );

@@ -13,13 +13,23 @@ exports.isStudent = async (req, res, next) => {
   } else next();
 };
 
+exports.getPoints = async (req, res) => {
+  try {
+    const { points } = await Student.findOne({ cod_student: req.userId });
+
+    res.send({ points });
+  } catch (err) {
+    res.status(400).send({ error: ok });
+  }
+};
+
 //show student semester
 exports.show_semester = async (req, res) => {
   try {
     const isStudent = await Student.findOne({ cod_student: req.userId });
 
     if (!isStudent) {
-      return res.status(401).json({ error: "user not found" });
+      return res.status(400).json({ error: "user not found" });
     }
     hanaConnection.connection.connect(hanaConnection.params, (err) => {
       if (err) {
@@ -32,7 +42,8 @@ exports.show_semester = async (req, res) => {
             FROM HISTORICO
             JOIN DISCIPLINA
             ON HISTORICO.INT_ID_DISCIPLINA = DISCIPLINA.INT_ID_DISCIPLINA
-            WHERE HISTORICO.ST_COD_ALUNO = '${isStudent.cod_student}'`;
+            WHERE HISTORICO.ST_COD_ALUNO = '${isStudent.cod_student}'
+            ORDER BY HISTORICO.IT_SEMESTRE DESC   ;`;
 
       hanaConnection.connection.exec(sql, async (err, rows) => {
         hanaConnection.connection.disconnect();
@@ -48,7 +59,7 @@ exports.show_semester = async (req, res) => {
         }
 
         if (err) {
-          return res.status(401).json({ error: `SQL execute error` });
+          return res.status(400).json({ error: `SQL execute error` });
         }
 
         if (rows.length === 0) {
@@ -70,7 +81,7 @@ exports.show_discipline = async (req, res) => {
     const isStudent = await Student.findOne({ cod_student: req.userId });
 
     if (!isStudent) {
-      return res.status(401).json({ error: "user not found" });
+      return res.status(400).json({ error: "user not found" });
     }
 
     hanaConnection.connection.connect(hanaConnection.params, (err) => {
@@ -93,7 +104,7 @@ exports.show_discipline = async (req, res) => {
         hanaConnection.connection.disconnect();
 
         if (err) {
-          return res.status(401).json({ error: `SQL execute error: ${err}` });
+          return res.status(400).json({ error: `SQL execute error: ${err}` });
         }
         if (rows.length === 0) {
           return res.json({ error: "no results for this student" });
@@ -146,42 +157,33 @@ async function enterCourse(discipline, cod_student, semester, cod_Teacher) {
 
 exports.enter_course = async (cod_student, course, semester) => {
   try {
-    console.log("antes do if");
     if (course == 1) {
-      console.log("primeiro if");
       if (semester === 1) {
-        console.log("segundo if");
         await enterCourse(1, cod_student, 1, "P5127");
         await enterCourse(2, cod_student, 1, "P1455");
       } else if (semester === 2) {
-        console.log("segundo if");
         await enterCourse(6, cod_student, 2, "P5127");
         await enterCourse(8, cod_student, 2, "P1455");
       }
     } else if (course == 2) {
-      console.log("primeiro if");
       if (semester == 1) {
-        console.log("segundo if");
         enterCourse(22, cod_student, 1, "P4996");
         enterCourse(23, cod_student, 1, "P5005");
       } else if (semester == 2) {
-        console.log("segundo if");
         enterCourse(26, cod_student, 2, "P5005");
         enterCourse(27, cod_student, 2, "P8481");
       }
     } else if (course == 3) {
-      console.log("primeiro if");
       if (semester == 1) {
-        console.log("segundo if");
         enterCourse(34, cod_student, 1, "P7554");
         enterCourse(35, cod_student, 1, "P9767");
       } else if (semester == 2) {
-        console.log("segundo if");
         enterCourse(39, cod_student, 2, "P7554");
         enterCourse(40, cod_student, 2, "P1307");
       }
     }
   } catch (err) {
+    res.status(400).send({ error: true });
     console.log(err);
   }
 };

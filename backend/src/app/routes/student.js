@@ -1,36 +1,35 @@
-const express = require('express');
+const express = require("express");
 
-const Question = require('../controllers/questionController');
+const Question = require("../controllers/questionController");
 
-const User = require('../controllers/userController');
+const User = require("../controllers/userController");
 
-const Student = require('../controllers/studentController');
+const Student = require("../controllers/studentController");
 
-const authMiddleware = require('../../middleware/auth');
+const authMiddleware = require("../../middleware/auth");
 
 const router = express.Router();
 
 router.use(authMiddleware, User.mail_valid, Student.isStudent);
 
-//grades routes
-router.get('/semester', Student.show_semester);
+router.get("/points", authMiddleware, Student.getPoints);
 
-router.get('/discipline', Student.show_discipline);
+//grades routes
+router.get("/semester", Student.show_semester);
+
+router.get("/discipline", Student.show_discipline);
 
 //forum routes
-router.get('/forum', Question.question_list);
+router.get("/forum", Question.question_list);
 
-router.post('/forum', Question.question_create);
+router.post("/forum", Question.question_create);
 
-router.delete('/forum/:questionId', Question.question_delete);
+router.delete("/forum/:questionId", Question.question_delete);
 
-router.get('/forum/:questionId', Question.question_show);
+router.get("/forum/:questionId", Question.question_show);
 
-router.put('/forum/:questionId', Question.question_update);
+router.put("/forum/:questionId", Question.question_update);
 
-router.put('/forum/createAnswer/:questionId', Question.answer_create);
-
-
+router.put("/forum/createAnswer/:questionId", Question.answer_create);
 
 module.exports = router;
-

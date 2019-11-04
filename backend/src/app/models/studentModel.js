@@ -24,6 +24,13 @@ const StudentSchema = new mongoose.Schema({
     required: true,
     default: 0
   },
+  phoneNumber: {
+    type: String,
+    required: true
+  },
+  favoritCollegeSubject: {
+    type: String
+  },
   points: {
     type: Number,
     default: 1,
