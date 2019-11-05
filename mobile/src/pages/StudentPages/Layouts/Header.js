@@ -49,7 +49,11 @@ export default class Nav extends Component {
             {this.state.points}
           </Text>
 
-          <Icon style={{color: '#daa520'}} type="MaterialIcons" name="grade" />
+          <Icon
+            style={{marginLeft: `5%`, color: '#daa520'}}
+            type="MaterialIcons"
+            name="grade"
+          />
         </View>
       </Header>
     );

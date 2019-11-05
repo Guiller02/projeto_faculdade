@@ -19,9 +19,9 @@ export const styles = StyleSheet.create({
   },
 
   listRightElements: {
-    flex: 1,
     flexDirection: 'row',
-    justifyContent: 'flex-end',
+    justifyContent: 'space-around',
+
     alignSelf: 'flex-end',
     alignItems: 'center',
   },

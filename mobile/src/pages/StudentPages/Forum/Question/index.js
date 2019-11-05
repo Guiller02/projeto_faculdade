@@ -137,18 +137,18 @@ export default class Question extends Component {
                 </View>
               </CardItem>
 
-              <CardItem style={{backgroundColor: '#ddd'}}>
+              <CardItem style={{backgroundColor: '#8875f0'}}>
                 <View
                   style={{
                     flexDirection: 'row',
                     justifyContent: 'space-between',
                     flex: 1,
                   }}>
-                  <Text>
+                  <Text style={{color: '#fff'}}>
                     {this.state.data.data.question.data.substring(8, 10) +
-                      '-' +
+                      '/' +
                       this.state.data.data.question.data.substring(5, 7) +
-                      '-' +
+                      '/' +
                       this.state.data.data.question.data.substring(0, 4)}
                   </Text>
 
@@ -160,7 +160,7 @@ export default class Question extends Component {
                       alignSelf: 'flex-end',
                       alignItems: 'center',
                     }}>
-                    <Text style={{paddingRight: 15}}>
+                    <Text style={{paddingRight: 15, color: '#fff'}}>
                       !{this.state.data.data.question.answers.length}
                     </Text>
 
@@ -171,7 +171,7 @@ export default class Question extends Component {
                           width: 15,
                           height: 15,
                           borderRadius: 44 / 2,
-                          backgroundColor: 'green',
+                          backgroundColor: '#c0f030',
                         }}>
                         <Text></Text>
                       </Button>
@@ -183,7 +183,7 @@ export default class Question extends Component {
                           width: 15,
                           height: 15,
                           borderRadius: 44 / 2,
-                          backgroundColor: 'red',
+                          backgroundColor: '#ab2e46',
                         }}>
                         <Text></Text>
                       </Button>
@@ -192,27 +192,65 @@ export default class Question extends Component {
                 </View>
               </CardItem>
 
-              <View>
-                <Form>
-                  <Textarea
-                    rowSpan={5}
-                    bordered
-                    placeholder="Digite sua solução"
-                    onChangeText={solution =>
-                      this.setState({solution: solution})
-                    }
-                    value={this.state.solution}
-                  />
-                </Form>
-                <TouchableOpacity
-                  onPress={this.sendSolution}
-                  style={{flexDirection: 'row', justifyContent: 'flex-end'}}>
-                  <Text style={{color: 'blue'}}>Enviar solução</Text>
-                </TouchableOpacity>
-              </View>
+              <Card
+                style={{
+                  paddingBottom: 15,
+                  borderBottomWidth: 0.5,
+                  borderBottomColor: '#8875f0',
+                }}>
+                <View>
+                  <Form
+                    style={{
+                      marginTop: 10,
+                      marginLeft: 10,
+                      marginRight: 10,
+                      borderWidth: 1,
+                      borderColor: '#8875f0',
+                    }}>
+                    <Textarea
+                      rowSpan={5}
+                      placeholder="Digite sua solução"
+                      onChangeText={solution =>
+                        this.setState({solution: solution})
+                      }
+                      value={this.state.solution}
+                    />
+                  </Form>
+                  <View
+                    style={{
+                      alignItems: 'flex-end',
+                      marginTop: 15,
+                      marginRight: 5,
+                    }}>
+                    <Button
+                      style={{
+                        width: 180,
+                        justifyContent: 'space-around',
+                        alignItems: 'center',
+                        borderRadius: 5,
+                        backgroundColor: '#8875f0',
+                      }}
+                      onPress={this.sendSolution}>
+                      <Text>Enviar Solução</Text>
+                      <Icon
+                        type="Ionicons"
+                        name="md-send"
+                        style={{color: '#fff'}}></Icon>
+                    </Button>
+                  </View>
+                </View>
+              </Card>
 
               <CardItem style={{justifyContent: 'center'}}>
-                <Text>Respostas</Text>
+                <Text
+                  style={{
+                    textAlign: 'center',
+                    fontSize: 20,
+                    color: '#595959',
+                    fontWeight: 'bold',
+                  }}>
+                  Respostas
+                </Text>
               </CardItem>
 
               <CardItem>
@@ -220,26 +258,35 @@ export default class Question extends Component {
                   dataArray={this.state.answers}
                   key={this.state.answers._id}
                   renderRow={data => (
-                    <View style={{marginBottom: 20}}>
-                      <View
-                        style={{
-                          flexDirection: 'row',
-                          justifyContent: 'space-between',
-                          flex: 1,
-                        }}>
-                        <Text>{data.username}</Text>
-                        <Text>{data.userRegister}</Text>
-                      </View>
-
-                      <Text>{data.answer}</Text>
-
-                      <Text>
+                    <View
+                      style={{
+                        backgroundColor: '#8875f0',
+                        borderColor: '#d1d1d1',
+                        borderWidth: 2,
+                        padding: 20,
+                        borderRadius: 10,
+                        marginBottom: 10,
+                      }}>
+                      <Text style={{color: 'white'}}>
                         {data.data.substring(8, 10) +
                           '-' +
                           data.data.substring(5, 7) +
                           '-' +
                           data.data.substring(0, 4)}
                       </Text>
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          justifyContent: 'space-between',
+                          flex: 1,
+                        }}>
+                        <Text style={{color: 'white'}}>{data.username}</Text>
+                        <Text style={{color: 'white'}}>
+                          {data.userRegister}
+                        </Text>
+                      </View>
+
+                      <Text style={{color: 'white'}}>{data.answer}</Text>
                     </View>
                   )}></List>
               </CardItem>

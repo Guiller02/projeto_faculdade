@@ -85,7 +85,7 @@ export default class index extends Component {
                 {this.state.points}
               </Text>
               <Icon
-                style={{color: '#daa520'}}
+                style={{marginLeft: `5%`, color: '#daa520'}}
                 type="MaterialIcons"
                 name="grade"
               />
@@ -94,6 +94,7 @@ export default class index extends Component {
 
           <Content>
             <List
+              style={{}}
               dataArray={this.state.data}
               keyExtractor={(data, index) => data._id}
               renderRow={data => (
@@ -112,17 +113,29 @@ export default class index extends Component {
 
                       <Text>
                         {data.data.substring(8, 10) +
-                          '-' +
+                          '/' +
                           data.data.substring(5, 7) +
-                          '-' +
+                          '/' +
                           data.data.substring(0, 4)}
                       </Text>
                     </Body>
 
                     <Right style={styles.listRightElements}>
-                      <Text style={{paddingRight: 15}}>
-                        !{data.answers.length}
-                      </Text>
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                          justifyContent: 'center',
+                        }}>
+                        <Icon
+                          style={{marginTop: 4, fontSize: 15, color: '#8875f0'}}
+                          type="MaterialIcons"
+                          name="chat">
+                          {' '}
+                        </Icon>
+                        <Text style={{marginRight: -10}}>
+                          {data.answers.length}
+                        </Text>
+                      </View>
 
                       {data.status === true && (
                         <Button
@@ -131,7 +144,7 @@ export default class index extends Component {
                             width: 15,
                             height: 15,
                             borderRadius: 44 / 2,
-                            backgroundColor: 'green',
+                            backgroundColor: '#c0f030',
                           }}>
                           <Text></Text>
                         </Button>
@@ -144,7 +157,7 @@ export default class index extends Component {
                             width: 15,
                             height: 15,
                             borderRadius: 44 / 2,
-                            backgroundColor: 'red',
+                            backgroundColor: '#ab2e46',
                           }}>
                           <Text></Text>
                         </Button>
