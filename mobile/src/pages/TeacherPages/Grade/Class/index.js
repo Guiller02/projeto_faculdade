@@ -1,8 +1,11 @@
 import React, {Component} from 'react';
-import {View, FlatList} from 'react-native';
+
+import {View, Alert, FlatList} from 'react-native';
 
 import api from '../../../../services/api';
+
 import reactotron from 'reactotron-react-native';
+
 import Loading from '../../../../helpers/loading';
 
 import {
@@ -42,6 +45,7 @@ export default class index extends Component {
   }
 
   sendGrades = async () => {
+    this.setState({loading: true});
     const {navigation} = this.props;
     reactotron.log(this.state.data);
 
@@ -52,6 +56,9 @@ export default class index extends Component {
         users: this.state.data,
       },
     });
+    setTimeout(() => {
+      this.setState({loading: false});
+    }, 4000);
   };
 
   keyExtractor = (item, index) => index.toString();
@@ -77,16 +84,22 @@ export default class index extends Component {
         <Right>
           <Item regular>
             <Input
+              mask={'[0.0]'}
+              keyboardType={'numeric'}
+              maxLength={3}
               onChangeText={value => {
                 const newObject = this.state.data;
                 const newArray = [...this.state.data];
                 newArray[index].GRADE = value;
                 newObject.data = newArray;
+
                 this.setState({
                   data: newObject,
                 });
+
                 reactotron.log(this.state.data);
               }}>
+              {item.GRADE === null && <Text>0.0</Text>}
               <Text>{`${item.GRADE}`}</Text>
             </Input>
           </Item>
@@ -107,7 +120,7 @@ export default class index extends Component {
               key={this.keyExtractor}
               renderItem={this.renderItem}></FlatList>
             <Button
-              style={{justifyContent: 'center'}}
+              style={{justifyContent: 'center', backgroundColor: '#8875f0'}}
               onPress={this.sendGrades}>
               <Text>Lançar notas</Text>
             </Button>

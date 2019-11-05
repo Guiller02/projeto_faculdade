@@ -104,7 +104,10 @@ export default class index extends Component {
 
                 <View>
                   <Button
-                    style={{justifyContent: 'center'}}
+                    style={{
+                      justifyContent: 'center',
+                      backgroundColor: '#8875f0',
+                    }}
                     onPress={() =>
                       this.props.navigation.navigate('Class', {Class: data})
                     }>

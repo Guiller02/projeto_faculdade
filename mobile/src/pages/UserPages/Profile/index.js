@@ -133,7 +133,7 @@ export default class CardExample extends Component {
 
                       <Right>
                         <TouchableOpacity onPress={this.removeValue}>
-                          <Text style={{color: 'blue'}}>Sair do perfil</Text>
+                          <Text style={{color: 'blue'}}>Sair da conta</Text>
                         </TouchableOpacity>
                       </Right>
                     </View>
@@ -148,7 +148,7 @@ export default class CardExample extends Component {
           <Container>
             <Content>
               <TouchableOpacity onPress={this.removeValue}>
-                <Text style={{color: 'blue'}}>Sair do perfil</Text>
+                <Text style={{color: 'blue'}}>Sair da conta</Text>
               </TouchableOpacity>
             </Content>
           </Container>

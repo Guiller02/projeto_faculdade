@@ -16,17 +16,36 @@ import Profile from '../UserPages/Profile/index';
 
 import Class from './Grade/Class/index';
 
-const GradeScreen = createStackNavigator({
-  Notas: {
-    screen: AllDisciplines,
-    navigationOptions: {
-      header: null,
+const GradeScreen = createStackNavigator(
+  {
+    Notas: {
+      screen: AllDisciplines,
+      navigationOptions: {
+        header: null,
+      },
+    },
+    Class: {
+      screen: Class,
     },
   },
-  Class: {
-    screen: Class,
+  {
+    defaultNavigationOptions: {
+      headerLayoutPreset: 'center',
+      headerTitleStyle: {
+        color: 'white',
+        fontFamily: 'OpenSans',
+      },
+
+      headerStyle: {
+        backgroundColor: '#7B68EE',
+        textAlign: 'center',
+      },
+
+      headerTintColor: '#fff',
+    },
+    headerLayoutPreset: 'center',
   },
-});
+);
 
 const ProfileScreen = createStackNavigator({
   Perfil: {

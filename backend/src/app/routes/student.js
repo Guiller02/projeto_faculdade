@@ -10,7 +10,7 @@ const authMiddleware = require("../../middleware/auth");
 
 const router = express.Router();
 
-router.use(authMiddleware, User.mail_valid, Student.isStudent);
+router.use(authMiddleware, Student.isStudent);
 
 router.get("/points", authMiddleware, Student.getPoints);
 

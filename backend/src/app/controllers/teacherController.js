@@ -25,7 +25,7 @@ exports.show_students = async (req, res) => {
 
     console.log(idDiscipline);
 
-    hanaConnection.connection.connect(hanaConnection.params, (err) => {
+    hanaConnection.connection.connect(hanaConnection.params, err => {
       if (err) {
         console.log(err);
         return res.status(400).send({ error: "error in show disciplines" });
@@ -80,7 +80,7 @@ exports.showAllDisciplines = async (req, res) => {
       return res.status(401).json({ error: "user not found" });
     }
 
-    hanaConnection.connection.connect(hanaConnection.params, (err) => {
+    hanaConnection.connection.connect(hanaConnection.params, err => {
       if (err) {
         console.log(err);
         return res.status(400).send({ error: "error in show disciplines" });
@@ -127,10 +127,10 @@ exports.insert_grades = async (req, res) => {
   console.log(discipline);
 
   // console.log(discipline, "usuarios:", users);
-  hanaConnection.connection.connect(hanaConnection.params, (err) => {
+  hanaConnection.connection.connect(hanaConnection.params, err => {
     let sql = "";
 
-    users.forEach((user) => {
+    users.forEach(user => {
       sql = `CALL ALTERARNOTA(${user.GRADE}, '${user.ST_COD_ALUNO}', '${req.userId}', ${discipline.class}, ${discipline.discipline});`;
       hanaConnection.connection.exec(sql, (error, status) => {
         hanaConnection.connection.disconnect();

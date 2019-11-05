@@ -160,9 +160,21 @@ export default class Question extends Component {
                       alignSelf: 'flex-end',
                       alignItems: 'center',
                     }}>
-                    <Text style={{paddingRight: 15, color: '#fff'}}>
-                      !{this.state.data.data.question.answers.length}
-                    </Text>
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        justifyContent: 'center',
+                      }}>
+                      <Icon
+                        style={{marginTop: 4, fontSize: 15, color: '#fff'}}
+                        type="MaterialIcons"
+                        name="chat">
+                        {' '}
+                      </Icon>
+                      <Text style={{paddingRight: 15, color: '#fff'}}>
+                        {this.state.data.data.question.answers.length}
+                      </Text>
+                    </View>
 
                     {this.state.data.data.question.status === true && (
                       <Button
@@ -225,6 +237,8 @@ export default class Question extends Component {
                     <Button
                       style={{
                         width: 180,
+                        marginLeft: 10,
+                        marginRight: 5,
                         justifyContent: 'space-around',
                         alignItems: 'center',
                         borderRadius: 5,

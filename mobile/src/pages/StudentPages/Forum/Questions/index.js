@@ -41,7 +41,7 @@ export default class index extends Component {
 
       this.setState({loading: false});
     } catch (e) {
-      reactotron.log(e);
+      return <Text>Verifique o emaiil para conseguir ver isso</Text>;
     }
   };
 

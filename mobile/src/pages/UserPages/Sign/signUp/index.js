@@ -34,6 +34,7 @@ export default class SignUp extends Component {
     mail: '',
     CPF: '',
     password: '',
+    cellphone: '',
   };
   onUserChange(value) {
     this.setState({
@@ -66,6 +67,8 @@ export default class SignUp extends Component {
           cpf: this.state.CPF,
           name: this.state.CPF,
           email: this.state.CPF,
+          phoneNumber: this.state.cellphone,
+          active: true,
         });
 
         await AsyncStorage.setItem('@Faculade:token', res.data.token);
@@ -142,6 +145,16 @@ export default class SignUp extends Component {
                   <Input
                     onChangeText={CPF => this.setState({CPF: CPF})}
                     value={this.state.CPF}
+                  />
+                </Item>
+
+                <Item floatingLabel style={styles.SignUpItemMargin}>
+                  <Label> Telefone</Label>
+                  <Input
+                    onChangeText={cellphone =>
+                      this.setState({cellphone: cellphone})
+                    }
+                    value={this.state.cellphone}
                   />
                 </Item>
 
