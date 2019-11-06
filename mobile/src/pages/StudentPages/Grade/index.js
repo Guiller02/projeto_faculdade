@@ -127,13 +127,25 @@ export default class index extends Component {
                       </Body>
                     )}
 
-                    {data.FL_NOTA_ALUNO > -1 && (
+                    {data.FL_NOTA_ALUNO > -1 && data.FL_NOTA_ALUNO < 10 && (
                       <Body
                         style={{
                           flexDirection: 'row',
                           justifyContent: 'flex-start',
                         }}>
                         <Text>{data.FL_NOTA_ALUNO.toFixed(1)}</Text>
+
+                        <Text>{data.IT_SEMESTRE}º Semestre</Text>
+                      </Body>
+                    )}
+
+                    {data.FL_NOTA_ALUNO === 10 && (
+                      <Body
+                        style={{
+                          flexDirection: 'row',
+                          justifyContent: 'flex-start',
+                        }}>
+                        <Text> {data.FL_NOTA_ALUNO}</Text>
 
                         <Text>{data.IT_SEMESTRE}º Semestre</Text>
                       </Body>
